@@ -36,7 +36,7 @@ function linreg(xs, ys) {
   for (const [x, y] of p) { sxx += (x - mx) ** 2; sxy += (x - mx) * (y - my); syy += (y - my) ** 2; }
   if (sxx === 0) return null;
   const m = sxy / sxx, b = my - m * mx;
-  const r2 = syy === 0 ? 1 : (sxy * sxy) / (sxx * syy);
+  const r2 = syy === 0 ? 0 : (sxy * sxy) / (sxx * syy); // 全点が同じ y (平坦) は情報のない直線なので R² = 0 扱い
   return { m, b, r2, n };
 }
 
@@ -94,7 +94,7 @@ function drawPlot(svg, opt) {
   g += `<rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="none" stroke="#4a5568"/>`;
   g += `<text x="${(L + W - R) / 2}" y="${H - 12}" font-size="13" text-anchor="middle" fill="#1a2633">${opt.xlabel || ""}</text>`;
   g += `<text transform="translate(16 ${(T + H - B) / 2}) rotate(-90)" font-size="13" text-anchor="middle" fill="#1a2633">${opt.ylabel || ""}</text>`;
-  g += `<clipPath id="clip"><rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}"/></clipPath><g clip-path="url(#clip)">`;
+  g += `<clipPath id="clip-${svg.id}"><rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}"/></clipPath><g clip-path="url(#clip-${svg.id})">`;
   (opt.lines || []).forEach((l, i) => {
     const c = l.color || PALETTE[i % PALETTE.length], pts = [];
     for (let k = 0; k <= 60; k++) {
@@ -288,12 +288,12 @@ function stdCurveTool(cfg) {
     const origs = [];
     for (let i = 0; i < cfg.unk; i++) {
       const m = v(`${k}-u${i}`), c = m - blank, f = num($(`#${k}-u${i}-f`).value);
-      const d = inv(c), o = Number.isFinite(f) ? d * f : NaN;
+      const d = inv(c), fOk = Number.isFinite(f) && f > 0, o = fOk ? d * f : NaN;
       const inRange = Number.isFinite(c) && c >= yLo && c <= yHi;
       $(`#${k}-u${i}-m`).textContent = fmt(m, 3); $(`#${k}-u${i}-c`).textContent = fmt(c, 3);
       $(`#${k}-u${i}-d`).textContent = Number.isFinite(d) ? `${fmt(d, 3)} ${cfg.xunit}` : "—";
-      $(`#${k}-u${i}-o`).innerHTML = Number.isFinite(o) ? `<b>${fmt(o, 3)}</b> ${cfg.xunit}` + (cfg.origUnit ? `<br><span class="note">${cfg.origUnit(o)}</span>` : "") : (Number.isFinite(d) ? '<span class="flag">倍率を入力</span>' : "—");
-      $(`#${k}-u${i}-j`).innerHTML = !Number.isFinite(c) || !fit ? "—" : inRange ? "✅ 範囲内" : '<span class="flag">⚠ 検量線の範囲外</span>';
+      $(`#${k}-u${i}-o`).innerHTML = Number.isFinite(o) ? `<b>${fmt(o, 3)}</b> ${cfg.xunit}` + (cfg.origUnit ? `<br><span class="note">${cfg.origUnit(o)}</span>` : "") : (Number.isFinite(d) ? `<span class="flag">${Number.isFinite(f) ? "倍率は正の数で入力" : "倍率を入力"}</span>` : "—");
+      $(`#${k}-u${i}-j`).innerHTML = !Number.isFinite(c) || !fit || !Number.isFinite(d) ? "—" : inRange ? "✅ 範囲内" : '<span class="flag">⚠ 検量線の範囲外</span>';
       if (Number.isFinite(d) && d > 0) marks.push({ x: d, y: c, label: cfg.unkLabels ? cfg.unkLabels[i] : `試料${i + 1}` });
       if (inRange && Number.isFinite(o)) origs.push(o);
     }
