@@ -1,0 +1,119 @@
+* { box-sizing: border-box; }
+:root {
+  --c1: #4c51bf;   /* primary */
+  --c2: #3c366b;   /* dark */
+  --c3: #ebf4ff;   /* tint */
+  --line: #d7dce5;
+  --muted: #5a6978;
+  --ink: #1a2633;
+  --ok: #2f855a;
+  --ng: #c53030;
+  --warn: #b7791f;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+  background: #f7f9fc; color: var(--ink);
+  max-width: 960px; margin: 0 auto; padding: 20px 16px; line-height: 1.75;
+}
+a { color: var(--c1); }
+header {
+  background: linear-gradient(135deg, var(--c1), var(--c2)); color: #fff;
+  padding: 22px 26px; border-radius: 10px; margin-bottom: 14px;
+}
+header h1 { margin: 0 0 4px; font-size: 22px; }
+header p { margin: 0; opacity: .92; font-size: 13px; }
+header a { color: #fff; }
+.crumb { font-size: 12px; margin-bottom: 6px; opacity: .9; }
+.meta-bar {
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 16px; margin-bottom: 14px; font-size: 13px; color: var(--muted);
+}
+.meta-bar b { color: var(--ink); }
+.tab-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.tab-bar button {
+  background: #fff; border: 1px solid var(--line); color: var(--muted);
+  border-radius: 5px; padding: 8px 14px; cursor: pointer; font-size: 13px; font-weight: 600;
+}
+.tab-bar button:hover { background: var(--c3); }
+.tab-bar button.active { background: var(--c2); color: #fff; border-color: var(--c2); }
+.panel {
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  padding: 20px 22px; margin-bottom: 14px; display: none;
+}
+.panel.active { display: block; }
+.panel h2 { margin: 0 0 8px; font-size: 18px; color: var(--c2); }
+.panel h3 { margin: 18px 0 8px; font-size: 15px; color: var(--c2); }
+.objective {
+  background: var(--c3); border-left: 4px solid var(--c1); padding: 10px 14px;
+  margin: 8px 0 14px; font-size: 13px; border-radius: 4px;
+}
+.caution {
+  background: #fffaf0; border-left: 4px solid #dd6b20; padding: 10px 14px;
+  margin: 10px 0; font-size: 13px; border-radius: 4px;
+}
+.note { font-size: 12px; color: var(--muted); }
+.btn, button.primary {
+  display: inline-block; background: var(--c1); color: #fff; border: 1px solid var(--c2);
+  padding: 7px 14px; border-radius: 5px; text-decoration: none; font-size: 13px;
+  font-weight: 600; cursor: pointer;
+}
+.btn:hover, button.primary:hover { background: var(--c2); }
+.btn.ghost, button.ghost { background: #fff; color: var(--c1); border: 1px solid var(--line); }
+.btn.ghost:hover, button.ghost:hover { background: var(--c3); }
+.ctrl { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; align-items: center; font-size: 13px; }
+.ctrl select, .ctrl input { border: 1px solid var(--line); border-radius: 5px; padding: 5px 8px; font-size: 13px; }
+
+/* data tables */
+.tbl-wrap { overflow-x: auto; margin: 8px 0; }
+table.data { border-collapse: collapse; font-size: 13px; min-width: 100%; }
+table.data th, table.data td { border: 1px solid var(--line); padding: 4px 6px; text-align: center; white-space: nowrap; }
+table.data th { background: #f1f4f9; font-weight: 600; }
+table.data input[type=number], table.data input[type=text] {
+  width: 76px; border: 1px solid #cbd2dc; border-radius: 4px; padding: 3px 5px; font-size: 13px; text-align: right;
+}
+table.data input[type=text] { text-align: left; }
+table.data td.calc { background: #fafbfd; font-variant-numeric: tabular-nums; }
+table.data tr.excluded td { color: #a0aec0; }
+.out {
+  background: #f7fafc; border: 1px solid var(--line); border-radius: 6px;
+  padding: 10px 14px; margin: 10px 0; font-size: 13px; font-variant-numeric: tabular-nums;
+}
+.out b { color: var(--c2); }
+.flag { color: var(--warn); font-weight: 600; }
+.plot { width: 100%; max-width: 640px; height: auto; display: block; background: #fff; border: 1px solid var(--line); border-radius: 6px; }
+
+/* checklist */
+ol.check { padding-left: 0; list-style: none; counter-reset: s; }
+ol.check li { counter-increment: s; margin: 6px 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; display: flex; gap: 8px; align-items: flex-start; }
+ol.check li::before { content: counter(s); font-weight: 700; color: var(--c1); min-width: 1.4em; }
+ol.check li.done { background: #f0fff4; color: #718096; text-decoration: line-through; }
+ol.check li input { margin-top: 5px; }
+.day-h { font-weight: 700; color: var(--c2); margin: 16px 0 4px; font-size: 14px; }
+
+/* quiz */
+.q { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.q .qt { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.q .opts { display: flex; flex-direction: column; gap: 5px; }
+.q .opts button {
+  text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 6px;
+  padding: 7px 10px; font-size: 13px; cursor: pointer;
+}
+.q .opts button:hover { background: var(--c3); }
+.q .opts button.right { background: #c6f6d5; border-color: var(--ok); }
+.q .opts button.wrong { background: #fed7d7; border-color: var(--ng); }
+.q .exp { display: none; margin-top: 8px; font-size: 13px; background: #f7fafc; padding: 8px 10px; border-radius: 6px; }
+.q.answered .exp { display: block; }
+
+/* report */
+.submit-box { border: 2px solid var(--c1); border-radius: 10px; padding: 14px 16px; margin: 12px 0; background: #fbfcff; }
+.submit-box .due { font-size: 15px; font-weight: 700; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { background: #fff; border: 0; padding: 6px 16px; cursor: pointer; font-weight: 700; color: var(--muted); }
+.seg button.active { background: var(--c2); color: #fff; }
+.task { border-left: 3px solid var(--c1); padding: 6px 12px; margin: 8px 0; background: #fafbff; font-size: 13.5px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; }
+.card h3 { margin: 0 0 4px; font-size: 16px; }
+.card p { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line); }
+@media (max-width: 560px) { .panel { padding: 16px 14px; } header h1 { font-size: 19px; } }

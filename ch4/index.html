@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生化学実習 第4章 — ELISA</title>
+<link rel="stylesheet" href="../assets/common.css">
+</head>
+<body>
+<header>
+  <div class="crumb"><a href="../">生化学実習 Interactive Lab</a> › 第4章</div>
+  <h1>🧪 第4章 抗原抗体反応を利用したタンパク質定量 (ELISA)</h1>
+  <p>サンドイッチ ELISA でヒト血清中の CRP (C 反応性タンパク質) 濃度を測定する</p>
+</header>
+<div class="meta-bar" id="meta"></div>
+<div class="tab-bar">
+  <button data-tab="overview">📖 概要・原理</button>
+  <button data-tab="flow">✅ 当日の流れ</button>
+  <button data-tab="tool">📈 データ解析</button>
+  <button data-tab="quiz">📝 予習クイズ</button>
+  <button data-tab="report">📤 レポート・提出</button>
+</div>
+
+<section class="panel" id="overview">
+  <h2>📖 目的と原理</h2>
+  <div class="objective"><b>目的</b>: 炎症マーカーの 1 つである C-reactive protein (CRP) に着目し、ELISA 法によりヒト血清中の CRP 濃度を測定する。ELISA の原理を理解する。</div>
+  <h3>本実習のサンドイッチ ELISA の構成</h3>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>層</th><th>内容</th><th>濃度</th></tr>
+    <tr><td>固相 (1 次抗体・捕獲抗体)</td><td style="text-align:left">ヤギ抗ヒト CRP ポリクローナル抗体</td><td>2 µg/mL (固相化済み)</td></tr>
+    <tr><td>ブロッキング</td><td style="text-align:left">2% BSA/PBS(−)</td><td>(配布時に入っている)</td></tr>
+    <tr><td>抗原</td><td style="text-align:left">標品 (ヒト CRP) / 希釈したヒト血清</td><td>100 µL/ウェル, 37 °C 1 時間</td></tr>
+    <tr><td>2 次抗体 (検出抗体)</td><td style="text-align:left">ウサギ抗ヒト CRP ポリクローナル抗体</td><td>2 µg/mL, 37 °C 30 分</td></tr>
+    <tr><td>3 次抗体 (酵素標識)</td><td style="text-align:left">HRP 標識ヤギ抗ウサギ Ig 抗体 (ヒト Igs 吸収済)</td><td>1:8000, 37 °C 30 分</td></tr>
+    <tr><td>発色</td><td style="text-align:left">OPD + H₂O₂ (HRP の基質) → 2 M H₂SO₄ で停止</td><td>492 nm で測定</td></tr>
+  </table></div>
+  <div class="caution">⚠️ <b>列 2〜5 と列 7〜9 にだけ 1 次抗体が固相化</b>されています。他の列に入れないこと (実習書 p.30 図 2)。反応停止液は 2 M 硫酸です。</div>
+  <h3>CRP の基準値 (実習書 p.31)</h3>
+  <p>成人で <b>0.3 mg/dL 以下</b> (高感度測定では 0.19 mg/dL 以下)。<b>1 mg/dL = 10 µg/mL = 10,000 ng/mL</b> — 標準曲線 (ng/mL) の値と単位をそろえて比べましょう。</p>
+  <p><a class="btn ghost" href="../pdf/ch4.pdf" target="_blank">📘 実習書 第4章 (p.27–32) を開く</a></p>
+</section>
+
+<section class="panel" id="flow">
+  <h2>✅ 当日の流れ</h2>
+  <p class="note">チェックはこの端末のブラウザにだけ保存されます。1 次抗体の固相化とブロッキング (手順 1–3) は実施済みの状態で配布されます。</p>
+  <div id="checklist"></div>
+</section>
+
+<section class="panel" id="tool">
+  <h2>📈 データ解析 (検算用) — 標準曲線と CRP 濃度</h2>
+  <div class="objective">A492 (duplicate) を入れると、ブランクを引いた平均から<b>片対数の標準曲線</b> (A492 と log₁₀ 濃度の直線回帰) を作り、試料の CRP 濃度を求めます。標準曲線は両端で平らになる (S 字型) ので、<b>直線部分の点だけを「回帰に使う」</b>ようにして比べてください。試料の希釈倍率は当日の指示に従って入力します。</div>
+  <div id="elisa"></div>
+</section>
+
+<section class="panel" id="quiz">
+  <h2>📝 予習クイズ</h2>
+  <p class="note">実習前の確認用です。成績には関係せず、回答は記録されません。</p>
+  <div id="quiz-list"></div>
+</section>
+
+<section class="panel" id="report">
+  <h2>📤 レポート・提出</h2>
+  <div id="submit"></div>
+  <h3>レポートに書くこと (実習書 p.31「4. まとめと問題」より)</h3>
+  <div class="task">実験目的・結果・考察とあわせて、以下の問題に回答すること。</div>
+  <div class="task"><b>1)</b> 得られた標準曲線から、血清中の CRP 濃度を求め、基準値と比較しなさい。もし、血清 CRP 濃度を算出できなかった場合はその原因を考えること。</div>
+  <div class="task"><b>2)</b> 成人で CRP 濃度が上昇する場合はどのような状態にあると考えられるか。</div>
+  <div class="task"><b>3)</b> サンドイッチ法を組立てる場合、抗体を選ぶ際に気をつけることは何か？</div>
+  <h3>提出前のチェック</h3>
+  <ul>
+    <li>班名・学籍番号・氏名・学科を記入した (<a href="../pdf/report_form.pdf" target="_blank">レポート用紙</a>)</li>
+    <li>標品・試料の A492 (2 ウェル・平均・ブランク差し引き) の表を載せた</li>
+    <li>標準曲線のグラフに軸の名前と単位を付けた (片対数)</li>
+    <li>希釈倍率を掛けて血清中の濃度に戻し、mg/dL に換算して基準値と比べた</li>
+    <li>1)–3) に回答した / 単一の PDF ファイルにまとめた</li>
+  </ul>
+</section>
+
+<footer>© 2026 高橋大輔 · 慶應義塾大学薬学部 生化学講座 · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a></footer>
+
+<script src="../assets/config.js"></script>
+<script src="../assets/common.js"></script>
+<script>
+const CH = 4;
+renderMeta($("#meta"), CH);
+initTabs();
+renderSubmit($("#submit"), CH);
+
+stdCurveTool({
+  root: $("#elisa"), key: "ch4elisa", reps: 2, unk: 4, blank: true, blankAsPoint: false, semilogx: true,
+  std: [100, 30, 10, 3, 1, 0.3, 0.1, 0.03].map((x) => ({ label: `${x} ng/mL`, x })),
+  unkLabels: ["試料 1", "試料 2", "試料 3", "試料 4"],
+  xunit: "ng/mL", yname: "A492", xlabel: "CRP 濃度 (ng/mL, 対数目盛)", ylabel: "A492 (−ブランク)", png: "ch4_ELISA_standard_curve.png",
+  origUnit: (ngml) => `= ${fmt(ngml / 10000, 3)} mg/dL (基準値 ≤ 0.3 mg/dL)`,
+});
+
+renderChecklist($("#checklist"), [
+  { h: "標品・試料の準備と反応", items: [
+    "標品の希釈: ヒト CRP 100 ng/mL から blocking buffer で希釈列を作る (100, 30, 10, 3, 1, 0.3, 0.1, 0.03 ng/mL)",
+    "試料の希釈: 配布されたヒト血清を指示どおり blocking buffer で希釈し、試料 1〜4 とする",
+    "blocking buffer をデカンテーションで捨て、キムタオルに打ち付けて除く",
+    "図 2 の配置で 1 ウェル 100 µL ずつ、1 種類 2 ウェルに分注 (列 2〜5・7〜9 のみ)。ラップで覆い 37 °C 1 時間",
+    "除去して洗浄液 200 µL で洗浄 × 5 回",
+    "2 次抗体 (2 µg/mL) 100 µL、37 °C 30 分 → 洗浄 × 5 回",
+    "3 次抗体 (HRP 標識, 1:8000) 100 µL、37 °C 30 分 (この間に OPD を量ってチューブに入れておく) → 洗浄 × 5 回",
+  ]},
+  { h: "発色と測定", items: [
+    "基質溶液 (OPD 4 mg + クエン酸/Na₂HPO₄ 混液 6 mL + 3% H₂O₂ 160 µL) を調製し、100 µL ずつ加える",
+    "黄色い発色が安定したら、2 M H₂SO₄ を 50 µL ずつ加えて停止",
+    "492 nm で吸光度を測定",
+    "標品の吸光度 (平均) から標準曲線を作り、試料中の CRP 濃度を求める",
+  ]},
+], "ch4");
+
+renderQuiz($("#quiz-list"), [
+  { q: "本実習の ELISA で酵素 (HRP) が標識されているのはどの抗体か。", opts: ["1 次抗体 (ヤギ抗ヒト CRP)", "2 次抗体 (ウサギ抗ヒト CRP)", "3 次抗体 (ヤギ抗ウサギ Ig)", "どれにも標識されていない"], ans: 2, exp: "HRP は 3 次抗体 (ヤギ抗ウサギ Ig 抗体) に標識されています。2 次抗体 (ウサギ由来) を認識して結合します。" },
+  { q: "BSA でブロッキングする目的は?", opts: ["抗原を固相化するため", "プレートへの非特異的な吸着を防ぐため", "HRP を活性化するため", "反応を停止するため"], ans: 1, exp: "抗体を固相化したあと、空いたプラスチック表面を BSA でふさぎ、後から加えるタンパク質 (抗体など) が非特異的に吸着するのを防ぎます。" },
+  { q: "洗浄液に含まれる Tween 20 の役割として適切なものは?", opts: ["界面活性剤として未結合の成分を洗い落としやすくする", "抗体を固相化する", "OPD を発色させる", "CRP を分解する"], ans: 0, exp: "Tween 20 は穏やかな界面活性剤で、弱く非特異的に付着した成分を洗い落とし、バックグラウンドを下げます。" },
+  { q: "OPD と H₂O₂ からなる基質溶液を発色させる酵素は?", opts: ["アルカリホスファターゼ", "β-ガラクトシダーゼ", "ホースラディッシュペルオキシダーゼ (HRP)", "トリプシン"], ans: 2, exp: "HRP が H₂O₂ を使って OPD を酸化し黄色い生成物ができます。2 M H₂SO₄ で停止し 492 nm で測定します。" },
+  { q: "0.3 mg/dL を ng/mL に換算すると?", opts: ["30 ng/mL", "300 ng/mL", "3,000 ng/mL", "30,000 ng/mL"], ans: 2, exp: "0.3 mg/dL = 3 mg/L = 3 µg/mL = 3,000 ng/mL です。" },
+  { q: "血清を 1,000 倍に希釈して測定したら、標準曲線から 2 ng/mL と求まった。血清中の CRP 濃度は?", opts: ["0.002 mg/dL", "0.02 mg/dL", "0.2 mg/dL", "2 mg/dL"], ans: 2, exp: "2 ng/mL × 1,000 = 2,000 ng/mL = 2 µg/mL = 0.2 mg/dL です。" },
+  { q: "3 次抗体が「ヒト Igs 吸収済」であるのはなぜか。", opts: ["ヒト血清中の免疫グロブリンに結合しないようにするため", "CRP に直接結合させるため", "HRP の活性を上げるため", "BSA に結合させるため"], ans: 0, exp: "試料のヒト血清には大量のヒト Ig が含まれます。3 次抗体がそれと交差反応すると偽の発色が生じるため、ヒト Ig に反応する成分をあらかじめ除いてあります。" },
+  { q: "CRP の産生について、実習書の説明と合うものはどれか。", opts: ["リンパ球が抗体として産生する", "IL-6 などのサイトカインにより肝細胞で発現が誘導される", "赤血球から放出される", "腎臓で合成される"], ans: 1, exp: "炎症時に活性化したマクロファージが IL-1、IL-6、TNFα を産生し、それらが肝細胞で CRP の遺伝子発現を誘導すると考えられています (実習書 p.31)。" },
+]);
+</script>
+</body>
+</html>

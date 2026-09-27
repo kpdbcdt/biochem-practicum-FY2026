@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生化学実習 第2章 — 酵素の阻害剤に関する実験</title>
+<link rel="stylesheet" href="../assets/common.css">
+</head>
+<body>
+<header>
+  <div class="crumb"><a href="../">生化学実習 Interactive Lab</a> › 第2章</div>
+  <h1>🧪 第2章 酵素の阻害剤に関する実験</h1>
+  <p>ロイペプチンのトリプシン阻害作用 — BAPNA の加水分解を Lineweaver-Burk プロットで解析する</p>
+</header>
+<div class="meta-bar" id="meta"></div>
+<div class="tab-bar">
+  <button data-tab="overview">📖 概要・原理</button>
+  <button data-tab="flow">✅ 当日の流れ</button>
+  <button data-tab="tool">📈 データ解析</button>
+  <button data-tab="sim">🔬 阻害様式シミュレーター</button>
+  <button data-tab="quiz">📝 予習クイズ</button>
+  <button data-tab="report">📤 レポート・提出</button>
+</div>
+
+<section class="panel" id="overview">
+  <h2>📖 目的と原理</h2>
+  <div class="objective"><b>目的</b>: 合成基質 BAPNA (α-N-Benzoyl-DL-Arginine-p-Nitroanilide) のトリプシンによる加水分解を行い、その反応に対するロイペプチンの阻害機構を Lineweaver-Burk プロットで解析する。</div>
+  <ul>
+    <li><b>トリプシン</b>はペプチド鎖中の Arg・Lys の C 末端側を選択的に加水分解するセリンプロテアーゼ。</li>
+    <li>BAPNA が加水分解されると <b>p-ニトロアニリン</b>が生じ、<b>410 nm</b> の吸光度で測定できる。</li>
+    <li><b>ロイペプチン</b>は放線菌の培養液から得られたプロテアーゼインヒビター (トリプシン・プラスミンなどを阻害)。</li>
+    <li>一定時間 (37 °C, 30 分) 反応させ、1 M HCl で停止して吸光度を測る。<b>トリプシン添加から HCl 添加までの時間をすべての試験管でそろえる</b>ことが重要。</li>
+  </ul>
+  <h3>Lineweaver-Burk の式</h3>
+  <div class="out" style="font-size:15px">1/V = (Km/Vmax) · 1/[S] + 1/Vmax</div>
+  <ul>
+    <li>縦軸 1/V、横軸 1/[S] にプロットすると直線になる。<b>y 切片 = 1/Vmax</b>、<b>x 切片 = −1/Km</b>、<b>傾き = Km/Vmax</b>。</li>
+    <li>拮抗 (競合) 阻害剤は、基質濃度を高くすれば阻害がなくなる → 阻害剤の有無で直線が y 軸上 (1/[S] = 0) で交わる。</li>
+    <li>阻害様式ごとの直線の変化は「🔬 阻害様式シミュレーター」タブで確かめられる。</li>
+  </ul>
+  <p><a class="btn ghost" href="../pdf/ch2.pdf" target="_blank">📘 実習書 第2章 (p.10–17) を開く</a></p>
+</section>
+
+<section class="panel" id="flow">
+  <h2>✅ 当日の流れ</h2>
+  <p class="note">チェックはこの端末のブラウザにだけ保存されます。試薬量は実習書 p.14 の表で必ず確認してください。</p>
+  <div id="checklist"></div>
+</section>
+
+<section class="panel" id="tool">
+  <h2>📈 データ解析 (検算用)</h2>
+  <div class="objective">A410 の測定値 (duplicate) を入れると、平均・ブランク (No.11) 差し引き・1/S・1/(V−Blank) を計算し、阻害剤なし (No.1–5) と阻害剤あり (No.6–10) の Lineweaver-Burk プロットを描きます。<b>グラフと Km の算出はレポートでは自分で行い</b>、このツールは答え合わせに使ってください。</div>
+  <div class="ctrl"><label><input type="checkbox" id="final"> [S] を反応液中の終濃度で扱う (表の濃度 × 0.5 mL / 2.0 mL = ÷4)</label></div>
+  <p class="note">実習書の結果表は BAPNA 溶液の濃度 (0.25–4.0 mM) をそのまま S として扱っています。終濃度に換算すると Km の値は 1/4 になりますが、阻害様式の判定は変わりません。レポートではどちらで計算したかを明記しましょう。</p>
+  <div class="tbl-wrap"><table class="data" id="lbtab"></table></div>
+  <div class="out" id="lbout"></div>
+  <svg class="plot" id="lbsvg"></svg>
+  <div class="ctrl"><button class="ghost" id="lbpng">🖼 グラフを PNG で保存</button><button class="ghost" id="lbclear">入力をすべて消去</button></div>
+</section>
+
+<section class="panel" id="sim">
+  <h2>🔬 阻害様式シミュレーター</h2>
+  <div class="objective">阻害様式を選び、阻害剤の強さ ([I]/Ki) を動かして、Lineweaver-Burk プロットの直線がどう変わるかを観察しましょう。【課題学習-2】を考える助けになります。</div>
+  <div class="ctrl">
+    <label>阻害様式</label>
+    <select id="simtype">
+      <option value="comp">競合 (拮抗) 阻害 — competitive</option>
+      <option value="noncomp">非競合 (非拮抗) 阻害 — noncompetitive</option>
+      <option value="uncomp">不競合 (反競合) 阻害 — uncompetitive</option>
+    </select>
+  </div>
+  <div class="ctrl"><label>Km (阻害剤なし)</label><input type="range" id="simkm" min="0.2" max="4" step="0.1" value="1"><span id="simkmv"></span> mM</div>
+  <div class="ctrl"><label>[I]/Ki</label><input type="range" id="simi" min="0" max="4" step="0.1" value="1"><span id="simiv"></span></div>
+  <div class="out" id="simout"></div>
+  <svg class="plot" id="simsvg"></svg>
+</section>
+
+<section class="panel" id="quiz">
+  <h2>📝 予習クイズ</h2>
+  <p class="note">実習前の確認用です。成績には関係せず、回答は記録されません。</p>
+  <div id="quiz-list"></div>
+</section>
+
+<section class="panel" id="report">
+  <h2>📤 レポート・提出</h2>
+  <div id="submit"></div>
+  <h3>レポートに書くこと (実習書 p.14–17 より)</h3>
+  <div class="task">レポートには、<b>実験目的、結果、考察、課題に対する回答</b>を記載すること。機器、試薬、方法を記載する必要はない。</div>
+  <div class="task"><b>結果とデータの解析 1)</b> 結果の表から、縦軸に 1/(V−Blank)、横軸に 1/S をとってグラフを作成し、これにより Km 値を求めなさい。</div>
+  <div class="task"><b>結果とデータの解析 2)</b> Lineweaver-Burk のグラフからロイペプチンの阻害様式がどのタイプか示しなさい (ヴォート基礎生化学 第5版 p.228–242 を参照)。</div>
+  <div class="task"><b>【課題学習-1】</b> ロイペプチンの生理作用について調べなさい。また、他のセリンプロテアーゼ阻害剤にはどのようなものがあるか調べなさい。</div>
+  <div class="task"><b>【課題学習-2】</b> 実習書 p.16–17 の図 A・図 B を見て、酵素 X と阻害剤 Y・Z についての記述のうち正しい考察を 2 つ選びなさい。</div>
+  <h3>提出前のチェック</h3>
+  <ul>
+    <li>班名・学籍番号・氏名・学科を記入した (<a href="../pdf/report_form.pdf" target="_blank">レポート用紙</a>)</li>
+    <li>No.1–11 の結果表 (S, 1/S, 吸光度 2 回, 平均, V−Blank, 1/(V−Blank)) を載せた</li>
+    <li>阻害剤なし・ありの 2 本の直線を同じグラフに描き、軸の名前と単位を付けた</li>
+    <li>Km (と Vmax) の求め方が式で示されている</li>
+    <li>阻害様式の判断の根拠 (どの切片・傾きが変わったか) を書いた</li>
+    <li>課題学習 1・2 に回答した / 単一の PDF ファイルにまとめた</li>
+  </ul>
+</section>
+
+<footer>© 2026 高橋大輔 · 慶應義塾大学薬学部 生化学講座 · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a></footer>
+
+<script src="../assets/config.js"></script>
+<script src="../assets/common.js"></script>
+<script>
+const CH = 2;
+renderMeta($("#meta"), CH);
+initTabs();
+renderSubmit($("#submit"), CH);
+
+/* ---- Lineweaver-Burk 解析 ---- */
+const S = [0.25, 0.5, 1.0, 2.0, 4.0];
+const tubes = [];
+for (let i = 0; i < 10; i++) tubes.push({ no: i + 1, s: S[i % 5], inh: i >= 5 });
+let th = `<tr><th>試験管 No.</th><th>BAPNA (mM)</th><th>ロイペプチン</th><th>1/S</th><th>A410 (1)</th><th>A410 (2)</th><th>平均 V</th><th>V − Blank</th><th>1/(V − Blank)</th><th>回帰に使う</th></tr>`;
+for (const t of tubes) th += `<tr id="lb-row${t.no}"><td>${t.no}</td><td>${t.s}</td><td>${t.inh ? "＋" : "−"}</td><td class="calc" id="lb-is${t.no}"></td><td><input type="number" step="any" id="lb-a${t.no}"></td><td><input type="number" step="any" id="lb-b${t.no}"></td><td class="calc" id="lb-m${t.no}"></td><td class="calc" id="lb-c${t.no}"></td><td class="calc" id="lb-iv${t.no}"></td><td><input type="checkbox" id="lb-use${t.no}" checked></td></tr>`;
+th += `<tr><td>11 (Blank)</td><td>0</td><td>−</td><td>—</td><td><input type="number" step="any" id="lb-a11"></td><td><input type="number" step="any" id="lb-b11"></td><td class="calc" id="lb-m11"></td><td>0</td><td>—</td><td>—</td></tr>`;
+$("#lbtab").innerHTML = th;
+
+function lbUpdate() {
+  const fin = $("#final").checked, f = fin ? 0.25 : 1;
+  const blank = mean([num($("#lb-a11").value), num($("#lb-b11").value)]);
+  $("#lb-m11").textContent = fmt(blank, 3);
+  const sets = { 0: { x: [], y: [], pts: [], hol: [] }, 1: { x: [], y: [], pts: [], hol: [] } };
+  for (const t of tubes) {
+    const s = t.s * f, m = mean([num($(`#lb-a${t.no}`).value), num($(`#lb-b${t.no}`).value)]);
+    const c = m - (Number.isFinite(blank) ? blank : 0), iv = c > 0 ? 1 / c : NaN, use = $(`#lb-use${t.no}`).checked;
+    $(`#lb-is${t.no}`).textContent = fmt(1 / s, 3);
+    $(`#lb-m${t.no}`).textContent = fmt(m, 3);
+    $(`#lb-c${t.no}`).textContent = fmt(c, 3);
+    $(`#lb-iv${t.no}`).innerHTML = Number.isFinite(c) && c <= 0 ? '<span class="flag">V−Blank ≤ 0</span>' : fmt(iv, 3);
+    $(`#lb-row${t.no}`).classList.toggle("excluded", !use);
+    const set = sets[t.inh ? 1 : 0];
+    if (Number.isFinite(iv)) { set.pts.push([1 / s, iv]); set.hol.push(!use); if (use) { set.x.push(1 / s); set.y.push(iv); } }
+  }
+  const fits = [linreg(sets[0].x, sets[0].y), linreg(sets[1].x, sets[1].y)];
+  const unit = fin ? "mM (終濃度)" : "mM (BAPNA 溶液の濃度)";
+  const desc = (name, fit) => {
+    if (!fit) return `${name}: 2 点以上入力してください`;
+    const vmax = 1 / fit.b, km = fit.m / fit.b;
+    return `${name}: 1/V = ${fmt(fit.m, 4)} · 1/[S] ${fit.b >= 0 ? "+" : "−"} ${fmt(Math.abs(fit.b), 4)}　(R² = ${fit.r2.toFixed(3)})<br>
+      　y 切片 1/Vmax = <b>${fmt(fit.b, 3)}</b> → Vmax = <b>${fmt(vmax, 3)}</b> (A410)　／　x 切片 −1/Km = <b>${fmt(-1 / km, 3)}</b> → Km = <b>${fmt(km, 3)}</b> ${unit}` +
+      (fit.b <= 0 ? ' <span class="flag">(y 切片が 0 以下: 測定値や使う点を見直しましょう)</span>' : "");
+  };
+  let html = desc("阻害剤なし (No.1–5)", fits[0]) + "<br>" + desc("ロイペプチンあり (No.6–10)", fits[1]);
+  if (fits[0] && fits[1] && fits[0].b > 0 && fits[1].b > 0) {
+    const r = (a, b) => (a / b).toFixed(2);
+    html += `<br><br>比 (あり ÷ なし): Vmax <b>${r(1 / fits[1].b, 1 / fits[0].b)}</b>　Km <b>${r(fits[1].m / fits[1].b, fits[0].m / fits[0].b)}</b>　傾き <b>${r(fits[1].m, fits[0].m)}</b>
+      <br><span class="note">→ 阻害剤によって変わったのは y 切片・x 切片・傾きのどれか? 2 本の直線はどこで交わるか? を見て、阻害様式を自分で判断しましょう。測定誤差があるので比が 1 から少しずれるのは普通です。</span>`;
+  }
+  $("#lbout").innerHTML = html;
+  const allX = [...sets[0].pts, ...sets[1].pts].map((p) => p[0]);
+  const xHi = allX.length ? Math.max(...allX) : 4;
+  const xInts = fits.filter((f) => f && f.b > 0 && f.m > 0).map((f) => -f.b / f.m);
+  const xLo = Math.min(0, ...xInts) * 1.15;
+  drawPlot($("#lbsvg"), {
+    xlabel: `1/[S] (${fin ? "mM⁻¹, 終濃度" : "mM⁻¹"})`, ylabel: "1/(V − Blank)",
+    series: [{ label: "ロイペプチンなし", color: "#4c51bf", pts: sets[0].pts, hollow: sets[0].hol }, { label: "ロイペプチンあり", color: "#c53030", pts: sets[1].pts, hollow: sets[1].hol }],
+    lines: fits.map((f, i) => f ? { color: i ? "#c53030" : "#4c51bf", x0: xLo, x1: xHi, f: (x) => f.m * x + f.b } : null).filter(Boolean),
+    xmin: xLo, ymin: 0,
+  });
+}
+persist($("#tool"), "ch2lb", lbUpdate);
+$("#lbpng").onclick = () => savePNG($("#lbsvg"), "ch2_Lineweaver-Burk.png");
+$("#lbclear").onclick = () => { if (confirmClear()) clearInputs($("#tool"), "ch2lb", lbUpdate); };
+
+/* ---- 阻害様式シミュレーター ---- */
+function simUpdate() {
+  const type = $("#simtype").value, km = +$("#simkm").value, i = +$("#simi").value, vmax = 1;
+  $("#simkmv").textContent = km.toFixed(1); $("#simiv").textContent = i.toFixed(1);
+  let kmA = km, vA = vmax;
+  if (type === "comp") kmA = km * (1 + i);
+  if (type === "noncomp") vA = vmax / (1 + i);
+  if (type === "uncomp") { vA = vmax / (1 + i); kmA = km / (1 + i); }
+  const lo = -1.2 / Math.min(km, kmA), hi = 4;
+  $("#simout").innerHTML = `阻害剤なし: Km = <b>${km.toFixed(2)}</b> mM, Vmax = <b>1.00</b>　／　阻害剤あり: 見かけの Km = <b>${kmA.toFixed(2)}</b> mM, 見かけの Vmax = <b>${vA.toFixed(2)}</b>`;
+  drawPlot($("#simsvg"), {
+    xlabel: "1/[S] (mM⁻¹)", ylabel: "1/V",
+    lines: [
+      { label: "阻害剤なし", color: "#4c51bf", x0: lo, x1: hi, f: (x) => (km / vmax) * x + 1 / vmax },
+      { label: "阻害剤あり", color: "#c53030", x0: lo, x1: hi, f: (x) => (kmA / vA) * x + 1 / vA },
+    ],
+    ymin: 0, xmin: lo,
+  });
+}
+["simtype", "simkm", "simi"].forEach((id) => $("#" + id).addEventListener("input", simUpdate));
+simUpdate();
+
+renderChecklist($("#checklist"), [
+  { h: "準備", items: [
+    "0.2 M トリス塩酸カルシウム緩衝液 (pH 8.0) を確認する (調製済みを配布)",
+    "試験管に 2.0, 1.0, 0.5, 0.25 と書き、精製水を 3.0 mL ずつ分注 (P5000)",
+    "4.0 mM BAPNA 3.0 mL を 2.0 の試験管に加えて混和。以下 2 倍系列希釈",
+    "細い試験管に No.1–11 を 2 本ずつ書く (duplicate)",
+    "表 (実習書 p.14) に従って蒸留水・Tris-HCl・BAPNA・ロイペプチンを加えて混和",
+  ]},
+  { h: "反応と測定", items: [
+    "No.1 から番号順にトリプシン (50 µg/mL) を 100 µL ずつ加えて混和し、37 °C 恒温槽へ",
+    "30 分後に取り出し、1 M HCl を 100 µL ずつ加えて反応を停止 (トリプシン添加からの時間をそろえる)",
+    "分光光度計で 410 nm の吸光度を測定 (Auto0 は精製水)",
+    "結果表を埋め、1/(V−Blank) と 1/S を計算してプロットする",
+  ]},
+], "ch2");
+
+renderQuiz($("#quiz-list"), [
+  { q: "トリプシンが切断するのはどこか。", opts: ["Arg・Lys の C 末端側", "Phe・Tyr・Trp の C 末端側", "Pro の N 末端側", "Asp・Glu の C 末端側"], ans: 0, exp: "トリプシンはペプチド鎖中の Arg・Lys の C 末端側を選択的に加水分解します。基質 BAPNA も Arg 誘導体です。" },
+  { q: "本実習で 410 nm の吸光度として測定しているものは?", opts: ["BAPNA", "p-ニトロアニリン", "トリプシン", "ロイペプチン"], ans: 1, exp: "BAPNA が加水分解されて生じる p-ニトロアニリンの黄色を 410 nm で測定し、反応量とします。" },
+  { q: "Lineweaver-Burk プロットの x 切片が表すものは?", opts: ["1/Vmax", "Km/Vmax", "−1/Km", "Vmax"], ans: 2, exp: "1/V = (Km/Vmax)(1/[S]) + 1/Vmax で 1/V = 0 とおくと 1/[S] = −1/Km。y 切片は 1/Vmax、傾きは Km/Vmax です。" },
+  { q: "競合 (拮抗) 阻害剤を加えたとき、Lineweaver-Burk プロットはどう変化するか。", opts: ["y 軸上で交わり、傾きが大きくなる", "x 軸上で交わり、y 切片が大きくなる", "平行移動する", "変化しない"], ans: 0, exp: "競合阻害では基質濃度を十分高くすれば阻害がなくなるので Vmax (y 切片) は変わらず、見かけの Km が大きくなります。" },
+  { q: "非競合 (非拮抗) 阻害で変化しないのはどれか。", opts: ["Vmax", "Km", "傾き", "y 切片"], ans: 1, exp: "(純粋な) 非競合阻害では Km は変わらず Vmax が低下します。直線は x 軸上 (−1/Km) で交わります。" },
+  { q: "阻害剤の有無で 2 本の直線が平行になった。考えられる阻害様式は?", opts: ["競合阻害", "非競合阻害", "不競合 (反競合) 阻害", "阻害なし"], ans: 2, exp: "不競合阻害では Km と Vmax が同じ割合で低下するため、傾き Km/Vmax が変わらず平行な直線になります。" },
+  { q: "反応を 1 M HCl で止める前後の時間を、すべての試験管でそろえるのはなぜか。", opts: ["HCl が 37 °C で分解するから", "一定時間の生成量を反応速度 V として比べるから", "ロイペプチンが酸で活性化されるから", "吸光度計の暖機のため"], ans: 1, exp: "30 分間という一定時間に生じた p-ニトロアニリン量を反応速度 V とみなしているため、反応時間が試験管ごとに違うと比較できません。" },
+  { q: "No.11 (BAPNA を含まない) の吸光度を差し引く目的は?", opts: ["基質以外に由来する吸光を除くため", "ロイペプチンの吸光を加えるため", "Km を大きくするため", "反応を停止するため"], ans: 0, exp: "No.11 は基質を含まないブランクです。トリプシンや緩衝液などに由来する吸光を差し引き、生成物由来の吸光だけを V とします。" },
+]);
+</script>
+</body>
+</html>

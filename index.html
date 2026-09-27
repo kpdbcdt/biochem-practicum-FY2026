@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生化学実習 Interactive Lab — FY2026</title>
+<link rel="stylesheet" href="assets/common.css">
+</head>
+<body>
+<header>
+  <h1>🧪 生化学実習 Interactive Lab</h1>
+  <p>FY2026 · 慶應義塾大学薬学部 薬学科・薬科学科 2 年 · 生化学講座 · 集合: B53・B54 実習室</p>
+</header>
+
+<div class="meta-bar">
+  📘 実習書: <a href="pdf/FY2026_Jisshusho_All.pdf" target="_blank">全体 (PDF, 83 ページ)</a> ·
+  <a href="pdf/appendix.pdf" target="_blank">付録 (マイクロピペット・分光光度計)</a> ·
+  <a href="pdf/report_form.pdf" target="_blank">レポート用紙</a><br>
+  🎓 K-LMS: <a href="https://lms.keio.jp/courses/151958" target="_blank">生化学実習 (151958)</a>　<span class="note">班分け表は K-LMS で確認してください。</span>
+</div>
+
+<div class="panel active">
+  <h2>📅 自分の日程とレポート締切</h2>
+  <div class="ctrl" id="pick"><span>自分のグループ:</span></div>
+  <div id="sched"></div>
+  <div class="objective" style="margin-top:14px">
+    <b>レポートの提出</b>: K-LMS より<b>単一の PDF ファイル</b>として提出してください。期限を超過した場合、受け取らないことや減点の対象となる場合があります。各章のページの「📤 レポート・提出」タブにも提出ボタンがあります。
+  </div>
+</div>
+
+<h2 style="font-size:18px;color:var(--c2);margin:22px 0 10px">📚 各章のページ</h2>
+<div class="cards" id="cards"></div>
+
+<div class="panel active" style="margin-top:18px">
+  <h2>💡 このサイトの使い方</h2>
+  <ul>
+    <li><b>実習前</b>: 「📖 概要・原理」と「📝 予習クイズ」で、その日の実験の目的と原理を確認する。</li>
+    <li><b>実習中</b>: 「✅ 当日の流れ」で手順をチェックしながら進める (液量・時間は必ず実習書で確認)。</li>
+    <li><b>実習後</b>: 「📈 データ解析」に自分の測定値を入れて、検量線や計算結果を<b>検算</b>する。レポートのグラフと計算は自分で作成すること。</li>
+    <li>入力した値とチェックは<b>この端末のブラウザにだけ</b>保存されます (他の人には見えません。別の端末には引き継がれません)。</li>
+  </ul>
+</div>
+
+<footer>
+  © 2026 高橋大輔 · 慶應義塾大学薬学部 生化学講座<br>
+  サイトのコードは <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a> · 実習書は受講者の学習用に掲載しています
+</footer>
+
+<script src="assets/config.js"></script>
+<script src="assets/common.js"></script>
+<script>
+const chName = (c) => `第${c}章`;
+function drawSched() {
+  const g = getGroup(), el = $("#sched");
+  if (!g) { el.innerHTML = `<p>上のボタンで自分のグループ (A/B) を選ぶと、実習日・レポート締切・提出ボタンが表示されます。</p>`; return; }
+  let h = `<div class="tbl-wrap"><table class="data"><tr><th>回</th><th>日時</th><th style="text-align:left">実習項目</th><th>ページ</th></tr>`;
+  for (const s of CONFIG.sessions[g]) h += `<tr><td>${s.n}</td><td>${s.date}</td><td style="text-align:left;white-space:normal">${s.what}</td><td>${s.ch.map((c) => `<a href="ch${c}/">${chName(c)}</a>`).join(" ")}</td></tr>`;
+  h += `<tr><td>11</td><td>${CONFIG.exam.date}</td><td style="text-align:left">${CONFIG.exam.what}<br><span class="note">集合: ${CONFIG.exam.place}</span></td><td></td></tr></table></div>`;
+  h += `<h3>${g} グループのレポート締切</h3><div class="tbl-wrap"><table class="data"><tr><th>章</th><th>締切</th><th>提出</th></tr>`;
+  for (const c of [1, 3, 5, 2, 4]) {
+    const r = CONFIG.reports[g][c];
+    h += `<tr><td style="text-align:left;white-space:normal">${chName(c)} ${CONFIG.chapters[c].title}</td><td><b>${r.due}</b></td><td><a class="btn" href="${r.url}" target="_blank" rel="noopener">📤 K-LMS で提出</a></td></tr>`;
+  }
+  el.innerHTML = h + `</table></div>`;
+}
+$("#pick").appendChild(groupSeg(drawSched));
+document.addEventListener("groupchange", drawSched);
+drawSched();
+
+$("#cards").innerHTML = [1, 2, 3, 4, 5].map((c) => {
+  const ch = CONFIG.chapters[c];
+  return `<div class="card"><h3>${chName(c)} ${ch.title}</h3><p>${ch.short}</p>
+    <a class="btn" href="ch${c}/">開く →</a> <a class="btn ghost" href="pdf/${ch.pdf}" target="_blank">実習書 p.${ch.page}〜</a></div>`;
+}).join("");
+</script>
+</body>
+</html>

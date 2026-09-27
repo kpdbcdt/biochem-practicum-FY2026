@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生化学実習 第1章 — タンパク質の定量</title>
+<link rel="stylesheet" href="../assets/common.css">
+</head>
+<body>
+<header>
+  <div class="crumb"><a href="../">生化学実習 Interactive Lab</a> › 第1章</div>
+  <h1>🧪 第1章 タンパク質の定量</h1>
+  <p>Bradford 法 (CBB 法) と紫外吸収法 (280 nm) で、濃度未知の試料 A・B のタンパク質濃度を求める</p>
+</header>
+<div class="meta-bar" id="meta"></div>
+<div class="tab-bar">
+  <button data-tab="overview">📖 概要・原理</button>
+  <button data-tab="flow">✅ 当日の流れ</button>
+  <button data-tab="tool">📈 データ解析</button>
+  <button data-tab="quiz">📝 予習クイズ</button>
+  <button data-tab="report">📤 レポート・提出</button>
+</div>
+
+<section class="panel" id="overview">
+  <h2>📖 目的と原理</h2>
+  <div class="objective"><b>目的</b>: 標準タンパク質 (BSA) を希釈して検量線をつくり、濃度未知の試料 A・B の濃度を求める。1 つの班が A 班・B 班に分かれ、A 班が試料 A、B 班が試料 B を担当する。</div>
+  <h3>代表的な定量法</h3>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>方法</th><th>原理</th><th>主な妨害物質</th></tr>
+    <tr><td>Bradford 法 (CBB 法)</td><td style="white-space:normal;text-align:left">酸性条件下で CBB がタンパク質 (主に Arg・Lys 残基と非極性残基) に結合し、赤紫 (極大 465 nm) → 青 (極大 595 nm) に変化</td><td style="white-space:normal">ほとんどの界面活性剤、DNA (0.1% 以上)</td></tr>
+    <tr><td>BCA 法</td><td style="white-space:normal;text-align:left">ビウレット反応で生じた Cu⁺ とビシンコニン酸が錯体 (極大 562 nm) を形成</td><td style="white-space:normal">還元剤 (DTT・メルカプトエタノール)、還元糖、EDTA などのキレート剤</td></tr>
+    <tr><td>紫外吸収法 (280 nm)</td><td style="white-space:normal;text-align:left">主に Tyr・Trp 側鎖の吸収。試薬不要・非破壊</td><td style="white-space:normal">感度は低く、タンパク質によるばらつきが大きい</td></tr>
+  </table></div>
+  <h3>今日の要点</h3>
+  <ul>
+    <li><b>2 倍系列希釈</b>: 1.0 mg/mL の BSA から ×2, ×4, …, ×64 を作る。作製した濃度は各自で計算して表に記入する。</li>
+    <li>未知試料は<b>自分で希釈倍率を決める</b> (CBB 法は 3 種類、280 nm 法は 2 種類)。どれか 1 つは検量線の範囲に入る必要がある。</li>
+    <li>CBB 法は 96 穴プレートで各濃度 3 ウェル (triplicate)、マイクロプレートリーダーで <b>545 nm</b> を測定する。</li>
+    <li>濃度は「吸光度が検量線の直線部分に入っている希釈率」から求め、<b>希釈倍率を掛けて原液の濃度</b>に戻す。</li>
+  </ul>
+  <p><a class="btn ghost" href="../pdf/ch1.pdf" target="_blank">📘 実習書 第1章 (p.1–9) を開く</a></p>
+</section>
+
+<section class="panel" id="flow">
+  <h2>✅ 当日の流れ</h2>
+  <p class="note">チェックはこの端末のブラウザにだけ保存されます。詳細な量・手順は必ず実習書で確認してください。</p>
+  <div id="checklist"></div>
+</section>
+
+<section class="panel" id="tool">
+  <h2>📈 データ解析 (検算用)</h2>
+  <div class="objective">測定値を入れると、ブランクを引いた平均・検量線 (最小二乗直線)・未知試料の濃度を計算します。<b>レポートのグラフと計算は自分で作成</b>し、このツールは答え合わせに使ってください。入力はこの端末のブラウザにだけ保存されます。</div>
+  <h3>① Bradford 法 (CBB 法) — 545 nm, triplicate</h3>
+  <div id="cbb"></div>
+  <h3>② 紫外吸収法 — 280 nm</h3>
+  <div id="a280"></div>
+</section>
+
+<section class="panel" id="quiz">
+  <h2>📝 予習クイズ</h2>
+  <p class="note">実習前の確認用です。成績には関係せず、回答は記録されません。</p>
+  <div id="quiz-list"></div>
+</section>
+
+<section class="panel" id="report">
+  <h2>📤 レポート・提出</h2>
+  <div id="submit"></div>
+  <h3>レポートに書くこと (実習書【IV】より)</h3>
+  <div class="task">レポートには、<b>実験目的、結果、考察、下記課題に対する回答</b>を記載すること。機器、試薬、方法を記載する必要はない。</div>
+  <div class="task"><b>課題</b>: 【II】および【III】の実験では、同一濃度のタンパク質試料の濃度を異なる定量法によって測定している。各々の測定法の利点と欠点を挙げなさい。</div>
+  <h3>提出前のチェック</h3>
+  <ul>
+    <li>班名・学籍番号・氏名・学科を記入した (<a href="../pdf/report_form.pdf" target="_blank">レポート用紙</a>)</li>
+    <li>CBB 法・280 nm 法それぞれの結果の表 (濃度・吸光度・平均・ブランク差し引き) を載せた</li>
+    <li>検量線のグラフに軸の名前と単位を付けた</li>
+    <li>どの希釈率の値から濃度を求めたか、希釈倍率を掛けて原液に戻したかが分かる</li>
+    <li>2 つの方法で求めた濃度を比較し、考察した</li>
+    <li>単一の PDF ファイルにまとめた</li>
+  </ul>
+</section>
+
+<footer>© 2026 高橋大輔 · 慶應義塾大学薬学部 生化学講座 · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ja">CC BY-NC 4.0</a></footer>
+
+<script src="../assets/config.js"></script>
+<script src="../assets/common.js"></script>
+<script>
+const CH = 1;
+renderMeta($("#meta"), CH);
+initTabs();
+renderSubmit($("#submit"), CH);
+
+const dil = [64, 32, 16, 8, 4, 2];
+stdCurveTool({
+  root: $("#cbb"), key: "ch1cbb", reps: 3, unk: 3, blank: true, blankAsPoint: true,
+  std: dil.map((d) => ({ label: `×${d}`, x: 1000 / d })),
+  xunit: "µg/mL", yname: "A545", xlabel: "BSA 濃度 (µg/mL)", ylabel: "A545 (−ブランク)", png: "ch1_CBB_standard_curve.png",
+});
+stdCurveTool({
+  root: $("#a280"), key: "ch1uv", reps: 1, unk: 2, blank: true, blankAsPoint: true,
+  std: dil.map((d) => ({ label: `×${d}`, x: 1000 / d })),
+  xunit: "µg/mL", yname: "A280", xlabel: "BSA 濃度 (µg/mL)", ylabel: "A280 (−ブランク)", png: "ch1_A280_standard_curve.png",
+});
+
+renderChecklist($("#checklist"), [
+  { h: "【II】Bradford 法 (CBB 法)", items: [
+    "1.5 mL チューブに ×2, ×4, ×8, ×16, ×32, ×64 と書く",
+    "すべてのチューブに PBS を 100 µL ずつ分注する (P1000)",
+    "BSA (1.0 mg/mL) 100 µL を ×2 に加えて混和 (500 µg/mL)。以下 100 µL ずつ移して 2 倍系列希釈 — 泡立てずによく混ぜる",
+    "作製した各濃度を計算して表に記入する",
+    "未知試料の希釈倍率を 3 種類決めて希釈する (例: ×2, ×8, ×32)",
+    "プレートの所定位置に 20 µL ずつ入れる (1 濃度 3 ウェル、A 班は A–C 行 / B 班は E–G 行)。ブランクは PBS 20 µL",
+    "すべての穴に CBB 試薬 200 µL を入れる (P1000)",
+    "静かに揺り動かし、室温で約 5 分放置",
+    "マイクロプレートリーダーで 545 nm を測定",
+    "ブランクを差し引いて検量線を作成し、未知試料の濃度を求める",
+  ]},
+  { h: "【III】紫外吸収法 (280 nm)", items: [
+    "試験管に ×2 〜 ×64 と書き、PBS を 3 mL ずつ分注する (P5000)",
+    "BSA (1 mg/mL) 3 mL を ×2 に加え、2 倍系列希釈を行う",
+    "未知試料の希釈倍率を 2 種類決めて希釈する",
+    "ブランク (PBS) で合わせ、低濃度の試料から 280 nm の吸光度を測定 (石英セル)",
+    "未知試料も低濃度から測定し、検量線から濃度を求める",
+  ]},
+], "ch1");
+
+renderQuiz($("#quiz-list"), [
+  { q: "Bradford 法で CBB がタンパク質に結合したとき、吸収極大はどう変化するか。", opts: ["465 nm (赤紫) → 595 nm (青)", "595 nm (青) → 465 nm (赤紫)", "280 nm → 562 nm", "変化しない"], ans: 0, exp: "酸性条件下で CBB がタンパク質に結合すると、赤紫 (465 nm) から青 (595 nm) に変化します。本実習ではプレートリーダーで 545 nm を測定します。" },
+  { q: "Bradford 法を<b>使えない</b>試料はどれか。", opts: ["還元剤を含む試料", "界面活性剤 (SDS など) を含む試料", "リン酸緩衝液に溶けた試料", "低濃度の塩を含む試料"], ans: 1, exp: "界面活性剤はそれ自身が強く発色するため Bradford 法には使えません。還元剤存在下で使えるのは Bradford 法の長所です。" },
+  { q: "BCA 法の測定を妨害する物質はどれか。", opts: ["界面活性剤", "ジチオスレイトール (DTT) や EDTA", "リン酸", "BSA"], ans: 1, exp: "BCA 法は Cu⁺ の生成を利用するため、還元剤 (DTT、メルカプトエタノール) や銅をキレートする EDTA が妨害します。界面活性剤には強いのが長所です。" },
+  { q: "タンパク質の 280 nm の吸収を主に担うのはどれか。", opts: ["ペプチド結合", "Arg と Lys の側鎖", "Tyr と Trp の側鎖", "Cys のジスルフィド結合"], ans: 2, exp: "280 nm の吸収はほとんどが Tyr と Trp の側鎖によるため、これらの含量でタンパク質ごとの吸光係数が大きく変わります。" },
+  { q: "1.0 mg/mL の BSA を 2 倍系列希釈したとき、×16 のチューブの濃度は?", opts: ["16 µg/mL", "62.5 µg/mL", "125 µg/mL", "31.3 µg/mL"], ans: 1, exp: "1000 µg/mL ÷ 16 = 62.5 µg/mL です。" },
+  { q: "未知試料を ×8 に希釈して測定し、検量線から 60 µg/mL と求まった。原液の濃度は?", opts: ["7.5 µg/mL", "60 µg/mL", "480 µg/mL", "68 µg/mL"], ans: 2, exp: "検量線から求まるのは希釈液の濃度です。希釈倍率を掛けて 60 × 8 = 480 µg/mL が原液の濃度になります。" },
+  { q: "未知試料の吸光度が最も濃い標準より大きくなった。どうするのが適切か。", opts: ["検量線を外挿して濃度を求める", "希釈倍率を上げた試料の値を使う", "ブランクを引かずに計算する", "標準の最大値の濃度とみなす"], ans: 1, exp: "検量線の範囲外 (特に高濃度側) は直線性が保証されません。検量線の範囲に入る希釈率の値から求めます。そのために希釈倍率を 3 種類用意します。" },
+  { q: "280 nm 法の長所として正しいものはどれか。", opts: ["最も高感度である", "試料を失わずに回収できる", "タンパク質の種類によるばらつきが小さい", "核酸の影響を受けない"], ans: 1, exp: "試薬を加えず吸光度を測るだけなので、試料は非破壊的に回収できます。一方、感度は低く、タンパク質によるばらつきが大きいのが短所です。" },
+]);
+</script>
+</body>
+</html>
