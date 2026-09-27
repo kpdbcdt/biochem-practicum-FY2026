@@ -2,12 +2,13 @@
 // 出典: K-LMS 151958「FY2026_生化学実習_実習予定表.pdf」(2026-09-28 取得)
 const CONFIG = {
   courseUrl: "https://lms.keio.jp/courses/151958",
+  // notebook: 各章の NotebookLM の URL (履修生への個別招待)。空なら章ページにリンクを出さない。
   chapters: {
-    1: { title: "タンパク質の定量", short: "Bradford 法・紫外吸収法", pdf: "ch1.pdf", page: 1 },
-    2: { title: "酵素の阻害剤に関する実験", short: "ロイペプチンのトリプシン阻害", pdf: "ch2.pdf", page: 10 },
-    3: { title: "SDS ポリアクリルアミドゲル電気泳動 (SDS-PAGE)", short: "血清タンパク質の分子量", pdf: "ch3.pdf", page: 18 },
-    4: { title: "抗原抗体反応を利用したタンパク質定量 (ELISA)", short: "血清 CRP の定量", pdf: "ch4.pdf", page: 27 },
-    5: { title: "プラスミド DNA の調製と分析、大腸菌の形質転換", short: "制限酵素・PCR・形質転換", pdf: "ch5.pdf", page: 33 },
+    1: { title: "タンパク質の定量", short: "Bradford 法・紫外吸収法", pdf: "ch1.pdf", page: 1, notebook: "" },
+    2: { title: "酵素の阻害剤に関する実験", short: "ロイペプチンのトリプシン阻害", pdf: "ch2.pdf", page: 10, notebook: "" },
+    3: { title: "SDS ポリアクリルアミドゲル電気泳動 (SDS-PAGE)", short: "血清タンパク質の分子量", pdf: "ch3.pdf", page: 18, notebook: "" },
+    4: { title: "抗原抗体反応を利用したタンパク質定量 (ELISA)", short: "血清 CRP の定量", pdf: "ch4.pdf", page: 27, notebook: "" },
+    5: { title: "プラスミド DNA の調製と分析、大腸菌の形質転換", short: "制限酵素・PCR・形質転換", pdf: "ch5.pdf", page: 33, notebook: "" },
   },
   // 実習日 (集合: B53・B54 実習室)
   sessions: {
