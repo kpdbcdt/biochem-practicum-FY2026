@@ -177,7 +177,7 @@ function initTabs() {
 
 /* ---------- 当日の流れ チェックリスト ---------- */
 function renderChecklist(el, days, key) {
-  el.innerHTML = days.map((d, di) => `<div class="day-h">${d.h}</div><ol class="check">${d.items.map((t, i) =>
+  el.innerHTML = `<div class="warn-red">⚠️ 実習は必ず実習書を見ながら行ってください。<small>このチェックリストは実習書の手順を短くまとめた要約です。液量・時間・温度・操作の順番は必ず実習書で確認し、当日の教員・TA の指示に従ってください。</small></div>` + days.map((d, di) => `<div class="day-h">${d.h}</div><ol class="check">${d.items.map((t, i) =>
     `<li><input type="checkbox" id="ck-${di}-${i}"><span>${t}</span></li>`).join("")}</ol>`).join("") +
     `<p><button class="ghost" id="ck-reset">チェックをすべて外す</button></p>`;
   const sync = () => $$("li", el).forEach((li) => li.classList.toggle("done", $("input", li).checked));

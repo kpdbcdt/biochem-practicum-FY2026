@@ -117,3 +117,5 @@ ol.check li input { margin-top: 5px; }
 .card p { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
 footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line); }
 @media (max-width: 560px) { .panel { padding: 16px 14px; } header h1 { font-size: 19px; } }
+.warn-red { color: #c53030; background: #fff5f5; border: 2px solid #c53030; border-radius: 8px; padding: 12px 14px; margin: 8px 0 14px; font-weight: 700; font-size: 14px; line-height: 1.7; }
+.warn-red small { display: block; font-weight: 400; color: #9b2c2c; margin-top: 4px; }
