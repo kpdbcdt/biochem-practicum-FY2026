@@ -49,13 +49,14 @@
 
 <section class="panel" id="tool">
   <h2>📈 データ解析 (検算用)</h2>
+  <div class="warn-red">⚠️ このタブは検算専用です。<small>レポートのグラフは、配布されたグラフ用紙（普通の方眼紙。片対数と間違えない）に<b>手書き</b>で作成し、レポートと一緒に提出してください。このページの図や計算結果をレポートに貼ったり写したりせず、計算の過程もレポートに自分で書くこと。</small></div>
   <div class="objective">A410 の測定値 (duplicate) を入れると、平均・ブランク (No.11) 差し引き・1/S・1/(V−Blank) を計算し、阻害剤なし (No.1–5) と阻害剤あり (No.6–10) の Lineweaver-Burk プロットを描きます。<b>グラフと Km の算出はレポートでは自分で行い</b>、このツールは答え合わせに使ってください。</div>
   <div class="ctrl"><label><input type="checkbox" id="final"> [S] を反応液中の終濃度で扱う (表の濃度 × 0.5 mL / 2.0 mL = ÷4)</label></div>
   <p class="note">実習書の結果表は BAPNA 溶液の濃度 (0.25–4.0 mM) をそのまま S として扱っています。終濃度に換算すると Km の値は 1/4 になりますが、阻害様式の判定は変わりません。レポートではどちらで計算したかを明記しましょう。</p>
   <div class="tbl-wrap"><table class="data" id="lbtab"></table></div>
   <div class="out" id="lbout"></div>
   <svg class="plot" id="lbsvg"></svg>
-  <div class="ctrl"><button class="ghost" id="lbpng">🖼 グラフを PNG で保存</button><button class="ghost" id="lbclear">入力をすべて消去</button></div>
+  <div class="ctrl"><button class="ghost" id="lbclear">入力をすべて消去</button></div>
 </section>
 
 <section class="panel" id="sim">
@@ -90,6 +91,17 @@
   <div class="task"><b>結果とデータの解析 2)</b> Lineweaver-Burk のグラフからロイペプチンの阻害様式がどのタイプか示しなさい (ヴォート基礎生化学 第5版 p.228–242 を参照)。</div>
   <div class="task"><b>【課題学習-1】</b> ロイペプチンの生理作用について調べなさい。また、他のセリンプロテアーゼ阻害剤にはどのようなものがあるか調べなさい。</div>
   <div class="task"><b>【課題学習-2】</b> 実習書 p.16–17 の図 A・図 B を見て、酵素 X と阻害剤 Y・Z についての記述のうち正しい考察を 2 つ選びなさい。</div>
+  <h3>レポートの書き方</h3>
+  <ul>
+  <li><b>構成</b>: 実験目的 → 結果 → 考察 → 課題への回答。機器・試薬・方法は書かなくてよい。</li>
+  <li>吸光度などの測定データは、<b>レポートの結果として自分で表に書く</b>（実習書の表に記入したもののコピーの提出は不可）。</li>
+  <li><b>結果</b>: No.1–11 の結果の表（BAPNA 濃度、1/S、吸光度 2 回、平均、V−Blank、1/(V−Blank)）と、Lineweaver-Burk のグラフ（縦軸 1/(V−Blank)、横軸 1/S。阻害剤なし・ありの 2 本の直線を同じグラフに描くと比べやすい）。<b>Km はグラフから求める</b>。</li>
+  <li><b>考察</b>: 2 本の直線の交わり方（y 軸上・x 軸上・平行）から阻害様式を判断し、根拠を書く。課題学習 1・2 に答える。</li>
+  <li>実習書 付3 の<a href="../pdf/report_form.pdf" target="_blank">レポート用紙</a>の見出し欄（第○章・提出日・班名・学籍番号・学科・氏名）を記入する。</li>
+  <li><b>グラフは配布されたグラフ用紙（普通の方眼紙。片対数と間違えない）に手書き</b>する。軸の名前と単位、目盛、測定点、引いた直線（または曲線）をはっきり書く。直線から除いた点があれば、その点と理由を書く。</li>
+  <li>計算は、式と代入した値、途中の結果が分かるように書く（希釈倍率を掛けて元の濃度に戻す、など）。</li>
+  <li>手書きのレポート・グラフ用紙・写真を貼ったページを<b>すべてスキャンして 1 つの PDF</b> にまとめ、K-LMS の自分のグループの課題に提出する。</li>
+  </ul>
   <h3>提出前のチェック</h3>
   <ul>
     <li>班名・学籍番号・氏名・学科を記入した (<a href="../pdf/report_form.pdf" target="_blank">レポート用紙</a>)</li>
@@ -164,7 +176,6 @@ function lbUpdate() {
   });
 }
 persist($("#tool"), "ch2lb", lbUpdate);
-$("#lbpng").onclick = () => savePNG($("#lbsvg"), "ch2_Lineweaver-Burk.png");
 $("#lbclear").onclick = () => { if (confirmClear()) clearInputs($("#tool"), "ch2lb", lbUpdate); };
 
 /* ---- 阻害様式シミュレーター ---- */

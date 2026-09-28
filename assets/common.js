@@ -264,7 +264,7 @@ function stdCurveTool(cfg) {
   for (let i = 0; i < cfg.unk; i++) h += `<tr><td>${cfg.unkLabels ? cfg.unkLabels[i] : "試料 " + (i + 1)}</td><td><input type="number" step="any" id="${k}-u${i}-f"></td>${repCells(`${k}-u${i}`)}<td class="calc" id="${k}-u${i}-m"></td><td class="calc" id="${k}-u${i}-c"></td><td class="calc" id="${k}-u${i}-d"></td><td class="calc" id="${k}-u${i}-o"></td><td class="calc" id="${k}-u${i}-j"></td></tr>`;
   h += `</table></div><div class="out" id="${k}-out">値を入力すると検量線が描かれます。</div>
     <svg class="plot" id="${k}-svg"></svg>
-    <div class="ctrl"><button class="ghost" id="${k}-png">🖼 グラフを PNG で保存</button><button class="ghost" id="${k}-clear">入力をすべて消去</button></div>`;
+    <div class="ctrl"><button class="ghost" id="${k}-clear">入力をすべて消去</button></div>`;
   cfg.root.innerHTML = h;
   const v = (id) => mean(Array.from({ length: R }, (_, j) => num($(`#${id}-r${j}`).value)));
   const tx = (x) => (cfg.semilogx ? Math.log10(x) : x);
@@ -314,7 +314,6 @@ function stdCurveTool(cfg) {
     });
   };
   persist(cfg.root, k, update);
-  $(`#${k}-png`).onclick = () => savePNG($(`#${k}-svg`), cfg.png);
   $(`#${k}-clear`).onclick = () => { if (confirmClear()) clearInputs(cfg.root, k, update); };
 }
 // ブラウザのダイアログは使わず、2 回押しで消去する
@@ -344,7 +343,7 @@ function migrationTool(cfg) {
     <div class="tbl-wrap"><table class="data"><tr><th>試料・バンド</th><th>移動距離</th>${cfg.useFront ? "<th>Rf</th>" : ""}<th>推定値</th><th>判定</th></tr>`;
   for (let i = 0; i < cfg.unk; i++) h += `<tr><td><input type="text" id="${k}-u${i}-n" value="${(cfg.unkDefaults && cfg.unkDefaults[i]) || ""}" style="width:130px"></td><td><input type="number" step="any" id="${k}-u${i}"></td>${cfg.useFront ? `<td class="calc" id="${k}-u${i}-rf"></td>` : ""}<td class="calc" id="${k}-u${i}-e"></td><td class="calc" id="${k}-u${i}-j"></td></tr>`;
   h += `</table></div><div class="out" id="${k}-out"></div><svg class="plot" id="${k}-svg"></svg>
-    <div class="ctrl"><button class="ghost" id="${k}-png">🖼 グラフを PNG で保存</button><button class="ghost" id="${k}-clear">入力をすべて消去</button></div>`;
+    <div class="ctrl"><button class="ghost" id="${k}-clear">入力をすべて消去</button></div>`;
   cfg.root.innerHTML = h;
   const update = () => {
     const front = cfg.useFront ? num($(`#${k}-front`).value) : 1;
@@ -380,6 +379,5 @@ function migrationTool(cfg) {
     });
   };
   persist(cfg.root, k, update);
-  $(`#${k}-png`).onclick = () => savePNG($(`#${k}-svg`), cfg.png);
   $(`#${k}-clear`).onclick = () => { if (confirmClear()) clearInputs(cfg.root, k, update); };
 }
