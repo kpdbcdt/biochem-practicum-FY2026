@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生化学実習 — マイクロピペットの使い方</title>
+<link rel="stylesheet" href="../assets/common.css">
+<style>
+  .dials { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; margin: 10px 0; }
+  .dial-box { text-align: center; }
+  .dial-box .model { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+  .dial { display: inline-block; border: 2px solid #4a5568; border-radius: 8px; width: 56px; font-size: 26px; font-weight: 700; font-family: Menlo, Consolas, monospace; background: #fff; }
+  .dial div { border-bottom: 1px solid #a0aec0; line-height: 1.4; }
+  .dial div:last-child { border-bottom: 0; }
+  .dial .dec { color: #c53030; }
+  .dial-box .val { margin-top: 6px; font-size: 18px; font-weight: 700; }
+  video { width: 100%; max-width: 720px; border-radius: 8px; border: 1px solid var(--line); background: #000; }
+</style>
+</head>
+<body>
+<header>
+  <div class="crumb"><a href="../">生化学実習 Interactive Lab</a> › マイクロピペットの使い方</div>
+  <h1>🧪 マイクロピペットの使い方</h1>
+  <p>全章で使います。実習書 付1（p.58–60）と合わせて確認してください。</p>
+</header>
+
+<div class="warn-red">⚠️ P20 と P200 の取り違いに注意！ ダイヤルの数字が同じでも、量は 10 倍違います。
+  <small>使う前に必ず、本体に書かれた型番（P20・P200 など）と容量範囲を確認してください。</small>
+</div>
+
+<div class="panel active">
+  <h2>① P20 と P200 — 同じ数字でも量が違う</h2>
+  <p>ダイヤルは 3 桁の数字が縦に並んでいます。<b>P20 は一番下の桁（赤）が小数点以下</b>、P200 は 3 桁そのままが µL です。</p>
+  <div class="dials">
+    <div class="dial-box"><div class="model">P20</div><div class="dial"><div>1</div><div>2</div><div class="dec">5</div></div><div class="val">= 12.5 µL</div></div>
+    <div class="dial-box"><div class="model">P200</div><div class="dial"><div>1</div><div>2</div><div>5</div></div><div class="val">= 125 µL</div></div>
+    <div class="dial-box"><div class="model">P20</div><div class="dial"><div>2</div><div>0</div><div class="dec">0</div></div><div class="val">= 20.0 µL</div></div>
+    <div class="dial-box"><div class="model">P200</div><div class="dial"><div>2</div><div>0</div><div>0</div></div><div class="val">= 200 µL</div></div>
+  </div>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>ダイヤルの表示</th><th>P20 なら</th><th>P200 なら</th></tr>
+    <tr><td>1 · 2 · 5</td><td><b>12.5 µL</b></td><td><b>125 µL</b></td></tr>
+    <tr><td>2 · 0 · 0</td><td><b>20.0 µL</b></td><td><b>200 µL</b></td></tr>
+    <tr><td>1 · 5 · 0</td><td><b>15.0 µL</b></td><td><b>150 µL</b></td></tr>
+  </table></div>
+  <ul>
+    <li><b>「20 µL」を取るつもりで P200 を「2 · 0 · 0」にすると 200 µL</b>（10 倍多い）。逆に 200 µL を取るつもりで P20 を「2 · 0 · 0」にすると 20 µL（10 分の 1）。</li>
+    <li>ダイヤルを合わせたら、<b>「型番」と「表示」を声に出して確認</b>してから吸う。</li>
+    <li>吸ったあと、チップに入った液の量が予定と大きく違って見えたら、いったん戻して確認する。</li>
+  </ul>
+</div>
+
+<div class="panel active">
+  <h2>② どのピペットを使うか</h2>
+  <ul>
+    <li>ピペットには<b>それぞれ使える容量の範囲（上限と下限）</b>があり、本体に書いてある（例: P200 は 20〜200 µL、P1000 は 100〜1000 µL）。</li>
+    <li><b>範囲外に無理に回すと壊れる</b>（1 本数万円）。</li>
+    <li>チップは<b>プッシュボタンの色</b>に合わせる（黄色 → イエローチップ、青 → ブルーチップ）。少しひねるようにしてしっかり付ける。ちゃんと付いていないと空気が入り、正確に取れない。</li>
+    <li><b>取る試薬が変わるときはチップを替える</b>（1 本のチップで複数の試薬を取るとコンタミネーションになる）。</li>
+  </ul>
+  <h3>この実習で実習書が指定している例</h3>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>章</th><th style="text-align:left">操作</th><th>ピペット</th></tr>
+    <tr><td>第1章</td><td style="text-align:left;white-space:normal">チューブに PBS を 100 µL ずつ分注 ／ CBB を 200 µL ずつ入れる</td><td>P1000</td></tr>
+    <tr><td>第1章</td><td style="text-align:left;white-space:normal">プレートに標準・未知試料を 20 µL ずつ入れる</td><td><b>P200</b></td></tr>
+    <tr><td>第1章・第2章</td><td style="text-align:left;white-space:normal">試験管に 3 mL ずつ分注</td><td>P5000</td></tr>
+    <tr><td>第3章</td><td style="text-align:left;white-space:normal">ゲルのウェルに試料 15 µL を添加（試料添加専用の先細チップを装着）</td><td><b>P20</b></td></tr>
+    <tr><td>第5章</td><td style="text-align:left;white-space:normal">アガロースゲルのウェルにサンプル 15 µL・ラダー 10 µL を注入</td><td><b>20 µL 用</b></td></tr>
+  </table></div>
+  <p class="note">各操作でどのピペットを使うかは、必ず実習書の各章の記載を確認してください。</p>
+</div>
+
+<div class="panel active">
+  <h2>③ 操作の手順（実習書 付1）</h2>
+  <ol class="check">
+    <li><span><b>容量のセット</b>: プッシュボタンを回して分取したい容量に合わせる。1 回回すごとに「カチッ」と音がして表示が変わるので、表示を見ながら行う。</span></li>
+    <li><span><b>チップを付ける</b>: 少しひねるようにして、しっかりと固定する。</span></li>
+    <li><span>プッシュボタンを<b>1 段目</b>（押したとき抵抗のあるところ）まで押し下げる。</span></li>
+    <li><span>ピペットをほぼ垂直に持ち、チップの先端を<b>液面から 1 cm 程度</b>まで浸す。</span></li>
+    <li><span>プッシュボタンを<b>ゆっくりと</b>戻して吸引する（急に戻すと試料が本体に入り、故障する）。</span></li>
+    <li><span>1 秒ほど待ってから、チップを静かに引き上げる。チップの外側についた試料は容器の縁に軽く触れて取り除く。<b>液が入ったままピペットを横にしない。</b></span></li>
+    <li><span>吐き出すときは、<b>1 段目</b>まで押し下げ、1 秒後に<b>2 段目</b>（さらに押せるところ）まで押し下げて、チップ内に試料が残らないようにする。</span></li>
+    <li><span>プッシュボタンを放して元の位置に戻す。</span></li>
+    <li><span>チップイジェクタを親指で押し下げてチップを外す（チップに手を触れない）。</span></li>
+  </ol>
+</div>
+
+<div class="panel active">
+  <h2>④ 動画と説明スライド</h2>
+  <video controls preload="metadata" src="../media/pipette.mp4"></video>
+  <p><a class="btn ghost" href="../pdf/slides/pipette_slides.pdf" target="_blank">📊 説明スライド (PDF)</a>　<a class="btn ghost" href="../pdf/appendix.pdf" target="_blank">📘 実習書 付録 (PDF)</a></p>
+</div>
+
+<footer>© 2026 高橋大輔 · 慶應義塾大学薬学部 生化学講座 · <a href="../">トップへ</a></footer>
+</body>
+</html>
