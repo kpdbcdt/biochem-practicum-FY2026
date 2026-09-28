@@ -8,7 +8,7 @@ const CONFIG = {
     2: { title: "酵素の阻害剤に関する実験", short: "ロイペプチンのトリプシン阻害", pdf: "ch2.pdf", page: 10, notebook: "" },
     3: { title: "SDS ポリアクリルアミドゲル電気泳動 (SDS-PAGE)", short: "血清タンパク質の分子量", pdf: "ch3.pdf", page: 18, notebook: "https://notebook.google.com/notebook/ec384675-868e-456c-a1c8-79040df338c4" },
     4: { title: "抗原抗体反応を利用したタンパク質定量 (ELISA)", short: "血清 CRP の定量", pdf: "ch4.pdf", page: 27, notebook: "" },
-    5: { title: "プラスミド DNA の調製と分析、大腸菌の形質転換", short: "制限酵素・PCR・形質転換", pdf: "ch5.pdf", page: 33, notebook: "" },
+    5: { title: "プラスミド DNA の調製と分析、大腸菌の形質転換", short: "制限酵素・PCR・形質転換", pdf: "ch5.pdf", page: 33, notebook: "https://notebook.google.com/notebook/da84df57-4f9c-4d62-a1df-c1e295964e02" },
   },
   // 実習日 (集合: B53・B54 実習室)
   sessions: {
