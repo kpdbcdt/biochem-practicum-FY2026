@@ -225,7 +225,7 @@ function renderMeta(el, ch) {
     const g = getGroup();
     const row = (G) => `<b>${G} グループ</b>: 実習 ${sessionsFor(ch, G).map((s) => s.date).join("・")} ／ レポート締切 <b>${CONFIG.reports[G][ch].due}</b>`;
     el.innerHTML = `📅 ${g ? row(g) : row("A") + "<br>📅 " + row("B")}　<span class="note">集合: B53・B54 実習室</span><br>
-      📘 <a href="../pdf/${CONFIG.chapters[ch].pdf}" target="_blank">実習書 第${ch}章 (PDF)</a>${CONFIG.chapters[ch].notebook ? `　·　🤖 <a href="${CONFIG.chapters[ch].notebook}" target="_blank" rel="noopener"><b>第${ch}章の質問ノートブック (NotebookLM)</b></a>` : ""}　·　<a href="../pdf/report_form.pdf" target="_blank">レポート用紙 (PDF)</a>　·　<a href="../">トップへ</a>`;
+      📘 <a href="../pdf/${CONFIG.chapters[ch].pdf}" target="_blank">実習書 第${ch}章 (PDF)</a>${CONFIG.chapters[ch].notebook ? `　·　🤖 <a href="${CONFIG.chapters[ch].notebook}" target="_blank" rel="noopener"><b>第${ch}章の質問ノートブック (Gemini ノートブック)</b></a>` : ""}　·　<a href="../pdf/report_form.pdf" target="_blank">レポート用紙 (PDF)</a>　·　<a href="../">トップへ</a>`;
   };
   draw(); document.addEventListener("groupchange", draw);
 }
