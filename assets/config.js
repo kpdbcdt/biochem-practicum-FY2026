@@ -9,7 +9,7 @@ const CONFIG = {
     2: { title: "酵素の阻害剤に関する実験", short: "ロイペプチンのトリプシン阻害", pdf: "ch2.pdf", page: 10, notebook: "https://notebook.google.com/notebook/e829eee6-b00c-419e-9c24-2839118c22b4", slides: "ch2_slides.pdf" },
     3: { title: "SDS ポリアクリルアミドゲル電気泳動 (SDS-PAGE)", short: "血清タンパク質の分子量", pdf: "ch3.pdf", page: 18, notebook: "https://notebook.google.com/notebook/ec384675-868e-456c-a1c8-79040df338c4", slides: "ch3_slides.pdf", extras: [{ label: "データ解析 (PDF)", file: "ch3_data_analysis.pdf" }, { label: "ゲル撮影の方法 (PDF)", file: "ch3_gel_imaging.pdf" }] },
     4: { title: "抗原抗体反応を利用したタンパク質定量 (ELISA)", short: "血清 CRP の定量", pdf: "ch4.pdf", page: 27, notebook: "https://notebook.google.com/notebook/73e31273-65f0-43c5-82d2-17df1ce6f203", slides: "ch4_slides.pdf" },
-    5: { title: "プラスミド DNA の調製と分析、大腸菌の形質転換", short: "制限酵素・PCR・形質転換", pdf: "ch5.pdf", page: 33, notebook: "https://notebook.google.com/notebook/da84df57-4f9c-4d62-a1df-c1e295964e02", slides: "ch5_slides.pdf" },
+    5: { title: "プラスミド DNA の調製と分析、大腸菌の形質転換", short: "制限酵素・PCR・形質転換", pdf: "ch5.pdf", page: 33, notebook: "https://notebook.google.com/notebook/da84df57-4f9c-4d62-a1df-c1e295964e02", slides: "ch5_slides.pdf", extras: [{ label: "試薬ラベル対応表 (PDF)", file: "ch5_reagent_labels.pdf" }] },
   },
   // 実習日 (集合: B53・B54 実習室)
   sessions: {
