@@ -15,7 +15,8 @@
   table.q { width: 100%; border-collapse: collapse; font-size: 14px; }
   table.q td { border-bottom: 1px solid var(--line); padding: 5px 4px; }
   table.q tr.called td { background: #fffbea; font-weight: 700; }
-  table.q button { font-size: 12px; padding: 3px 8px; margin-left: 2px; }
+  table.q button, .note button { font-size: 12px; padding: 3px 8px; margin-left: 2px; }
+  button[disabled] { opacity: .45; cursor: not-allowed; }
   .err { color: var(--ng); font-weight: 700; }
   .status { font-size: 12px; color: var(--muted); }
 </style>
@@ -70,20 +71,31 @@ const $ = (s) => document.querySelector(s);
 let key = ""; try { key = localStorage.getItem("q.key") || ""; } catch (e) {}
 let group = Q.defaultGroup(), items = [];
 
+// 応答に 2〜4 秒かかるので、押した瞬間に画面へ反映し（楽観的更新）、返事で確定させる。
+// 返事を待っている行は「送信中…」にしてボタンを押せなくする（古い画面のまま二度押しして別の行を操作する事故を防ぐ）。
+const pend = new Set();            // 返事待ちの行の id
+let chain = Promise.resolve();     // 操作は送った順にサーバーへ届ける
+
 function teamButtons(el, kinds) {
   el.innerHTML = Array.from({ length: Q.TEAMS }, (_, i) => `${group}${i + 1}`).map((t) => {
-    const reg = kinds.every((k) => items.some((it) => it.team === t && it.kind === k));
+    const reg = kinds.every((k) => items.some((it) => it.team === t && it.kind === k && it.status !== "done"));
     return `<button data-t="${t}" class="${reg ? "reg" : ""}" title="${reg ? "登録済み" : "登録する"}">${t}</button>`;
   }).join("");
-  el.querySelectorAll("button").forEach((b) => b.onclick = async () => {
+  el.querySelectorAll("button").forEach((b) => b.onclick = () => {
     if (b.classList.contains("reg") && !confirmLike(`${b.dataset.t} は登録済みです。もう一度登録しますか？`)) return;
-    for (const k of kinds) await act({ action: "add", group, team: b.dataset.t, kind: k });
-    refresh();
+    for (const k of kinds) addItem(b.dataset.t, k);
   });
 }
 // ブラウザの確認ダイアログは使わない（2 回押しで確定）
 let pending = "";
-function confirmLike(msg) { if (pending === msg) { pending = ""; return true; } pending = msg; $("#msg").innerHTML = `<p class="err">${msg}（もう一度押すと登録）</p>`; return false; }
+function confirmLike(msg) { if (pending === msg) { pending = ""; return true; } pending = msg; $("#msg").innerHTML = `<p class="err">${Q.esc(msg)}（もう一度押すと登録）</p>`; return false; }
+
+function rowButtons(it) {
+  if (pend.has(it.id)) return '<span class="status">送信中…</span>';
+  return `${it.status === "waiting" ? `<button class="primary" data-id="${it.id}" data-s="called">呼ぶ</button>` : `<button class="ghost" data-id="${it.id}" data-s="waiting">待ちに戻す</button>`}
+      <button class="ghost" data-id="${it.id}" data-s="done">済み</button>
+      <button class="ghost" data-id="${it.id}" data-s="cancelled">取消</button>`;
+}
 
 function render() {
   teamButtons($("#t1"), ["photo1", "colony"]);
@@ -91,31 +103,53 @@ function render() {
   const sp = Q.split(items);
   $("#board").innerHTML = Object.entries(Q.QUEUE).map(([q, title]) => {
     const s = sp[q], rows = [...s.called, ...s.waiting];
-    const body = rows.length ? rows.map((it, i) => `<tr class="${it.status}"><td>${it.status === "called" ? "🔔 呼出中" : (i - s.called.length + 1) + " 番目"}</td><td>${it.team}</td><td>${Q.KIND[it.kind].label}</td><td style="text-align:right;white-space:nowrap">
-      ${it.status === "waiting" ? `<button class="primary" data-id="${it.id}" data-s="called">呼ぶ</button>` : `<button class="ghost" data-id="${it.id}" data-s="waiting">待ちに戻す</button>`}
-      <button class="ghost" data-id="${it.id}" data-s="done">済み</button>
-      <button class="ghost" data-id="${it.id}" data-s="cancelled">取消</button></td></tr>`).join("")
+    const busy = rows.concat(s.done).some((it) => pend.has(it.id));
+    const body = rows.length ? rows.map((it, i) => `<tr class="${it.status}"><td>${it.status === "called" ? "🔔 呼出中" : (i - s.called.length + 1) + " 番目"}</td><td>${it.team}</td><td>${Q.KIND[it.kind].label}</td><td style="text-align:right;white-space:nowrap">${rowButtons(it)}</td></tr>`).join("")
       : '<tr><td class="status">待っている班はありません</td></tr>';
     const next = s.waiting[0];
-    return `<div class="card"><h3>${title}</h3>${next ? `<p><button class="primary" data-id="${next.id}" data-s="called">次を呼ぶ: ${next.team}</button></p>` : ""}<table class="q">${body}</table><p class="note">済み: ${s.done.map((it) => it.team).join("、") || "なし"}</p></div>`;
+    const nextBtn = next ? `<p><button class="primary" data-id="${next.id}" data-s="called" ${busy ? "disabled" : ""}>次を呼ぶ: ${next.team}</button>${busy ? ' <span class="status">送信中…</span>' : ""}</p>` : "";
+    const done = s.done.length
+      ? s.done.map((it) => pend.has(it.id) ? `${it.team}（送信中…）` : `${it.team} <button class="ghost" data-id="${it.id}" data-s="waiting" title="待ちに戻す">↩</button>`).join("　")
+      : "なし";
+    return `<div class="card"><h3>${title}</h3>${nextBtn}<table class="q">${body}</table><p class="note">済み（↩ で待ちに戻す）: ${done}</p></div>`;
   }).join("");
-  $("#board").querySelectorAll("button[data-id]").forEach((b) => b.onclick = async () => { await act({ action: "set", id: b.dataset.id, status: b.dataset.s }); refresh(); });
+  $("#board").querySelectorAll("button[data-id]").forEach((b) => b.onclick = () => setStatus(b.dataset.id, b.dataset.s));
   document.querySelectorAll("#grp button").forEach((b) => b.classList.toggle("active", b.dataset.g === group));
 }
 
-// 連続で押しても取りこぼさないよう、操作は 1 件ずつ順番に送る
-let chain = Promise.resolve();
-function act(p) {
+function send(p, onOk, onErr) {
   chain = chain.then(async () => {
-    try { await Q.call({ ...p, key }); $("#msg").innerHTML = ""; }
-    catch (e) { $("#msg").innerHTML = `<p class="err">${Q.esc(e.message)}</p>`; }
+    try { const d = await Q.call({ ...p, key }); onOk(d); $("#msg").innerHTML = ""; }
+    catch (e) { onErr(); $("#msg").innerHTML = `<p class="err">${Q.esc(e.message)}（画面を元に戻しました）</p>`; }
+    render();
   });
-  return chain;
+}
+
+function setStatus(id, status) {
+  const it = items.find((x) => x.id === id);
+  if (!it || pend.has(id)) return;
+  const prev = it.status;
+  it.status = status; pend.add(id);
+  if (status === "cancelled") items = items.filter((x) => x !== it);
+  render();
+  send({ action: "set", id, status },
+    (d) => { pend.delete(id); if (status !== "cancelled") Object.assign(it, d.item); },
+    () => { pend.delete(id); it.status = prev; if (!items.includes(it)) items.push(it); });
+}
+
+function addItem(team, kind) {
+  const tmp = { id: "tmp" + Date.now() + Math.floor(Math.random() * 1e6), group, team, kind, status: "waiting", created: new Date().toISOString() };
+  items.push(tmp); pend.add(tmp.id); render();
+  send({ action: "add", group, team, kind },
+    (d) => { pend.delete(tmp.id); items = items.filter((x) => x !== tmp && x.id !== d.item.id); items.push(d.item); },
+    () => { pend.delete(tmp.id); items = items.filter((x) => x !== tmp); });
 }
 
 async function refresh() {
+  if (pend.size) return;   // 返事待ちの間は、楽観的に変えた画面を古い一覧で上書きしない
   try {
     const d = await Q.call({ action: "list", group });
+    if (pend.size) return;
     items = Q.clean(d.items); render(); $("#stamp").textContent = "更新 " + Q.time(d.now);
   } catch (e) { $("#msg").innerHTML = `<p class="err">${Q.esc(e.message)}</p>`; }
 }
@@ -133,7 +167,7 @@ async function login(k) {
 $("#enter").onclick = () => login($("#key").value);
 $("#key").onkeydown = (e) => { if (e.key === "Enter") login($("#key").value); };
 $("#logout").onclick = () => { try { localStorage.removeItem("q.key"); } catch (e) {} location.reload(); };
-document.querySelectorAll("#grp button").forEach((b) => b.onclick = () => { group = b.dataset.g; refresh(); });
+document.querySelectorAll("#grp button").forEach((b) => b.onclick = () => { if (pend.size) return; group = b.dataset.g; items = []; render(); refresh(); });
 if (key) login(key);
 </script>
 </body>
