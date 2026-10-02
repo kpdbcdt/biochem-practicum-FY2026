@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生化学実習 — 第5章 撮影・観察の順番</title>
+<link rel="stylesheet" href="../assets/common.css">
+<style>
+  .qgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .now { font-size: 30px; font-weight: 800; color: var(--c2); line-height: 1.3; }
+  .now small { display: block; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .wait { list-style: none; padding: 0; margin: 6px 0 0; }
+  .wait li { display: flex; gap: 10px; align-items: baseline; padding: 6px 8px; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .wait li .pos { min-width: 2.4em; color: var(--muted); font-size: 13px; }
+  .wait li .k { color: var(--muted); font-size: 12px; }
+  .mine { background: #fffbea; font-weight: 700; }
+  .me { font-size: 16px; padding: 10px 14px; border-radius: 8px; background: var(--c3); margin: 8px 0; }
+  .status { font-size: 12px; color: var(--muted); }
+  .err { color: var(--ng); font-weight: 700; }
+</style>
+</head>
+<body>
+<header>
+  <div class="crumb"><a href="../">生化学実習 Interactive Lab</a> › <a href="../ch5/">第5章</a> › 撮影・観察の順番</div>
+  <h1>📋 第5章 2日目 — ゲル撮影・コロニー観察の順番</h1>
+  <p>中央台で登録された順番をそのまま表示します。順番が来たらマイクでもアナウンスされます。</p>
+</header>
+
+<div class="panel active">
+  <div class="ctrl">
+    グループ <span class="seg" id="grp"><button data-g="A">A</button><button data-g="B">B</button></span>
+    自分の班 <select id="team"><option value="">選択してください</option></select>
+    <span class="status" id="stamp"></span>
+  </div>
+  <div id="me"></div>
+  <div id="msg"></div>
+  <div class="qgrid" id="board"></div>
+  <p class="note">・電気泳動を始めたら、中央台に伝えてください（このページから登録はできません）。<br>
+  ・① 制限酵素処理したプラスミドの泳動を始めると申し出たときに、コロニー観察の順番待ちにも同時に登録されます。<br>
+  ・このページは 15 秒ごとに自動で更新されます。</p>
+</div>
+
+<footer>© 2026 高橋大輔 · 慶應義塾大学薬学部 生化学講座 · <a href="../ch5/">第5章へ</a></footer>
+<script src="../assets/config.js"></script>
+<script src="queue.js"></script>
+<script>
+let group = localStorage.getItem("q.group") || Q.defaultGroup();
+const $ = (s) => document.querySelector(s);
+
+function fillTeams() {
+  const sel = $("#team"), mine = localStorage.getItem("q.team." + group) || "";
+  sel.innerHTML = '<option value="">選択してください</option>' +
+    Array.from({ length: Q.TEAMS }, (_, i) => `${group}${i + 1}`).map((t) => `<option ${t === mine ? "selected" : ""}>${t}</option>`).join("");
+  document.querySelectorAll("#grp button").forEach((b) => b.classList.toggle("active", b.dataset.g === group));
+}
+
+function render(items) {
+  const team = $("#team").value, sp = Q.split(items);
+  let meHtml = "";
+  $("#board").innerHTML = Object.entries(Q.QUEUE).map(([q, title]) => {
+    const s = sp[q];
+    const now = s.called.length
+      ? s.called.map((it) => `<div class="now ${it.team === team ? "mine" : ""}">${it.team}<small>${Q.KIND[it.kind].label}</small></div>`).join("")
+      : '<div class="now">—<small>呼び出し中の班はありません</small></div>';
+    const list = s.waiting.length
+      ? s.waiting.map((it, i) => `<li class="${it.team === team ? "mine" : ""}"><span class="pos">${i + 1} 番目</span><span>${it.team}</span><span class="k">${Q.KIND[it.kind].label}</span></li>`).join("")
+      : '<li><span class="k">待っている班はありません</span></li>';
+    if (team) {
+      s.called.filter((it) => it.team === team).forEach((it) => { meHtml += `<div class="me">🔔 <b>${team}</b> の番です：${Q.KIND[it.kind].label}</div>`; });
+      s.waiting.forEach((it, i) => { if (it.team === team) meHtml += `<div class="me">${team}：${Q.KIND[it.kind].label} は ${i === 0 ? "<b>次の番です</b>（呼ばれるまで待機）" : `<b>あと ${i} 班</b>（${i + 1} 番目）`}</div>`; });
+      s.done.filter((it) => it.team === team).forEach((it) => { meHtml += `<div class="me">✅ ${team}：${Q.KIND[it.kind].label} は済み</div>`; });
+    }
+    return `<div class="card"><h3>${title}</h3><p class="note">呼び出し中</p>${now}<p class="note" style="margin-top:10px">待ち（登録順）</p><ul class="wait">${list}</ul><p class="note">済み: ${s.done.length} 班</p></div>`;
+  }).join("");
+  $("#me").innerHTML = team ? (meHtml || `<div class="me">${team} はまだ登録されていません</div>`) : "";
+}
+
+async function refresh() {
+  try {
+    const d = await Q.call({ action: "list", group });
+    render(d.items);
+    $("#msg").innerHTML = "";
+    $("#stamp").textContent = "更新 " + Q.time(d.now);
+  } catch (e) {
+    $("#msg").innerHTML = `<p class="err">${e.message}</p>`;
+  }
+}
+
+document.querySelectorAll("#grp button").forEach((b) => b.onclick = () => {
+  group = b.dataset.g; try { localStorage.setItem("q.group", group); } catch (e) {}
+  fillTeams(); refresh();
+});
+$("#team").onchange = () => { try { localStorage.setItem("q.team." + group, $("#team").value); } catch (e) {} refresh(); };
+fillTeams(); refresh(); setInterval(refresh, 15000);
+</script>
+</body>
+</html>

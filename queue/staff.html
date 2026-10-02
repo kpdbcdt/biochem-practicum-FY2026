@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>生化学実習 — 第5章 順番待ち（中央台）</title>
+<link rel="stylesheet" href="../assets/common.css">
+<style>
+  .teams { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 6px; margin: 6px 0 14px; }
+  .teams button { padding: 8px 0; font-weight: 700; border: 1px solid var(--line); border-radius: 6px; background: #fff; cursor: pointer; font-size: 14px; }
+  .teams button:hover { background: var(--c3); }
+  .teams button.reg { background: #e6fffa; border-color: var(--ok); color: var(--ok); }
+  .qgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+  table.q { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.q td { border-bottom: 1px solid var(--line); padding: 5px 4px; }
+  table.q tr.called td { background: #fffbea; font-weight: 700; }
+  table.q button { font-size: 12px; padding: 3px 8px; margin-left: 2px; }
+  .err { color: var(--ng); font-weight: 700; }
+  .status { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <div class="crumb"><a href="../">生化学実習 Interactive Lab</a> › <a href="./">撮影・観察の順番</a> › 中央台</div>
+  <h1>🎛 中央台 — 第5章 2日目の順番待ち</h1>
+  <p>教員・TA 用。合言葉を入れると登録・呼び出しができます。</p>
+</header>
+
+<div class="panel active" id="login">
+  <div class="ctrl">合言葉 <input type="password" id="key" autocomplete="off"> <button class="primary" id="enter">開始</button> <span id="loginmsg"></span></div>
+</div>
+
+<div class="panel" id="main">
+  <div class="ctrl">
+    グループ <span class="seg" id="grp"><button data-g="A">A</button><button data-g="B">B</button></span>
+    <span class="status" id="stamp"></span> <button class="ghost" id="logout">合言葉を消す</button>
+  </div>
+  <div id="msg"></div>
+  <h3>① 制限酵素処理したプラスミドの泳動を開始した班 → 撮影 ① とコロニー観察を同時に登録</h3>
+  <div class="teams" id="t1"></div>
+  <h3>② PCR 産物の泳動を開始した班 → 撮影 ② を登録</h3>
+  <div class="teams" id="t2"></div>
+  <div class="qgrid" id="board"></div>
+</div>
+
+<footer>© 2026 高橋大輔 · 慶應義塾大学薬学部 生化学講座</footer>
+<script src="../assets/config.js"></script>
+<script src="queue.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+let key = ""; try { key = localStorage.getItem("q.key") || ""; } catch (e) {}
+let group = Q.defaultGroup(), items = [], busy = false;
+
+function teamButtons(el, kinds) {
+  el.innerHTML = Array.from({ length: Q.TEAMS }, (_, i) => `${group}${i + 1}`).map((t) => {
+    const reg = kinds.every((k) => items.some((it) => it.team === t && it.kind === k));
+    return `<button data-t="${t}" class="${reg ? "reg" : ""}" title="${reg ? "登録済み" : "登録する"}">${t}</button>`;
+  }).join("");
+  el.querySelectorAll("button").forEach((b) => b.onclick = async () => {
+    if (b.classList.contains("reg") && !confirmLike(`${b.dataset.t} は登録済みです。もう一度登録しますか？`)) return;
+    for (const k of kinds) await act({ action: "add", group, team: b.dataset.t, kind: k });
+    refresh();
+  });
+}
+// ブラウザの確認ダイアログは使わない（2 回押しで確定）
+let pending = "";
+function confirmLike(msg) { if (pending === msg) { pending = ""; return true; } pending = msg; $("#msg").innerHTML = `<p class="err">${msg}（もう一度押すと登録）</p>`; return false; }
+
+function render() {
+  teamButtons($("#t1"), ["photo1", "colony"]);
+  teamButtons($("#t2"), ["photo2"]);
+  const sp = Q.split(items);
+  $("#board").innerHTML = Object.entries(Q.QUEUE).map(([q, title]) => {
+    const s = sp[q], rows = [...s.called, ...s.waiting];
+    const body = rows.length ? rows.map((it, i) => `<tr class="${it.status}"><td>${it.status === "called" ? "🔔 呼出中" : (i - s.called.length + 1) + " 番目"}</td><td>${it.team}</td><td>${Q.KIND[it.kind].label}</td><td style="text-align:right;white-space:nowrap">
+      ${it.status === "waiting" ? `<button class="primary" data-id="${it.id}" data-s="called">呼ぶ</button>` : `<button class="ghost" data-id="${it.id}" data-s="waiting">待ちに戻す</button>`}
+      <button class="ghost" data-id="${it.id}" data-s="done">済み</button>
+      <button class="ghost" data-id="${it.id}" data-s="cancelled">取消</button></td></tr>`).join("")
+      : '<tr><td class="status">待っている班はありません</td></tr>';
+    const next = s.waiting[0];
+    return `<div class="card"><h3>${title}</h3>${next ? `<p><button class="primary" data-id="${next.id}" data-s="called">次を呼ぶ: ${next.team}</button></p>` : ""}<table class="q">${body}</table><p class="note">済み: ${s.done.map((it) => it.team).join("、") || "なし"}</p></div>`;
+  }).join("");
+  $("#board").querySelectorAll("button[data-id]").forEach((b) => b.onclick = async () => { await act({ action: "set", id: b.dataset.id, status: b.dataset.s }); refresh(); });
+  document.querySelectorAll("#grp button").forEach((b) => b.classList.toggle("active", b.dataset.g === group));
+}
+
+async function act(p) {
+  if (busy) return; busy = true;
+  try { await Q.call({ ...p, key }); $("#msg").innerHTML = ""; }
+  catch (e) { $("#msg").innerHTML = `<p class="err">${e.message}</p>`; }
+  finally { busy = false; }
+}
+
+async function refresh() {
+  try {
+    const d = await Q.call({ action: "list", group });
+    items = d.items; render(); $("#stamp").textContent = "更新 " + Q.time(d.now);
+  } catch (e) { $("#msg").innerHTML = `<p class="err">${e.message}</p>`; }
+}
+
+async function login(k) {
+  $("#loginmsg").textContent = "確認中…";
+  try {
+    await Q.call({ action: "check", key: k });
+    key = k; try { localStorage.setItem("q.key", k); } catch (e) {}
+    $("#login").classList.remove("active"); $("#main").classList.add("active");
+    refresh(); if (!window.__qTimer) window.__qTimer = setInterval(refresh, 10000);
+  } catch (e) { $("#loginmsg").innerHTML = `<span class="err">${e.message}</span>`; }
+}
+
+$("#enter").onclick = () => login($("#key").value);
+$("#key").onkeydown = (e) => { if (e.key === "Enter") login($("#key").value); };
+$("#logout").onclick = () => { try { localStorage.removeItem("q.key"); } catch (e) {} location.reload(); };
+document.querySelectorAll("#grp button").forEach((b) => b.onclick = () => { group = b.dataset.g; refresh(); });
+if (key) login(key);
+</script>
+</body>
+</html>
