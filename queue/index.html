@@ -30,14 +30,14 @@
   <div class="ctrl">
     グループ <span class="seg" id="grp"><button data-g="A">A</button><button data-g="B">B</button></span>
     自分の班 <select id="team"><option value="">選択してください</option></select>
-    <span class="status" id="stamp"></span>
+    <button class="ghost" id="now">今すぐ更新</button> <span class="status" id="stamp"></span>
   </div>
   <div id="me"></div>
   <div id="msg"></div>
   <div class="qgrid" id="board"></div>
   <p class="note">・電気泳動を始めたら、中央台に伝えてください（このページから登録はできません）。<br>
   ・① 制限酵素処理したプラスミドの泳動を始めると申し出たときに、コロニー観察の順番待ちにも同時に登録されます。<br>
-  ・このページは 15 秒ごとに自動で更新されます。</p>
+  ・このページは 10 秒ごとに自動で更新されます（「今すぐ更新」でもすぐ取り直せます）。中央台で登録・呼び出しをしてから表示が変わるまで、最大 10 秒ほどかかります。</p>
 </div>
 
 <footer>© 2026 高橋大輔 · 慶應義塾大学薬学部 生化学講座 · <a href="../ch5/">第5章へ</a></footer>
@@ -91,7 +91,11 @@ document.querySelectorAll("#grp button").forEach((b) => b.onclick = () => {
   fillTeams(); refresh();
 });
 $("#team").onchange = () => { try { localStorage.setItem("q.team." + group, $("#team").value); } catch (e) {} refresh(); };
-fillTeams(); refresh(); setInterval(refresh, 15000);
+let loading = false;
+async function refreshOnce() { if (loading) return; loading = true; try { await refresh(); } finally { loading = false; } }
+$("#now").onclick = refreshOnce;
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshOnce(); });
+fillTeams(); refreshOnce(); setInterval(() => { if (!document.hidden) refreshOnce(); }, 10000);
 </script>
 </body>
 </html>
