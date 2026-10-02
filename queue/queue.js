@@ -26,7 +26,7 @@ const Q = {
       const cb = "__q" + Date.now() + Math.floor(Math.random() * 1e6);
       const qs = new URLSearchParams({ ...params, callback: cb, _: Date.now() });
       const s = document.createElement("script");
-      const timer = setTimeout(() => { cleanup(); reject(new Error("サーバーから応答がありません")); }, 15000);
+      const timer = setTimeout(() => { cleanup(); reject(new Error("サーバーから応答がありません（しばらくして自動で再取得します）")); }, 30000);
       function cleanup() { clearTimeout(timer); delete window[cb]; s.remove(); }
       window[cb] = (data) => { cleanup(); data && data.ok ? resolve(data) : reject(new Error((data && data.error) || "エラー")); };
       s.onerror = () => { cleanup(); reject(new Error("通信に失敗しました")); };
