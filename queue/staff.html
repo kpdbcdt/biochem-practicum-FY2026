@@ -126,6 +126,7 @@ function send(p, onOk, onErr) {
 }
 
 function setStatus(id, status) {
+  pending = "";   // 別の操作をしたら、登録済みの班の確認はやり直し
   const it = items.find((x) => x.id === id);
   if (!it || pend.has(id)) return;
   const prev = it.status;
@@ -138,6 +139,7 @@ function setStatus(id, status) {
 }
 
 function addItem(team, kind) {
+  pending = "";
   const tmp = { id: "tmp" + Date.now() + Math.floor(Math.random() * 1e6), group, team, kind, status: "waiting", created: new Date().toISOString() };
   items.push(tmp); pend.add(tmp.id); render();
   send({ action: "add", group, team, kind },
