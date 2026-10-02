@@ -12,7 +12,7 @@ const CONFIG = {
     5: { title: "プラスミド DNA の調製と分析、大腸菌の形質転換", short: "制限酵素・PCR・形質転換", pdf: "ch5.pdf", page: 33, notebook: "https://notebook.google.com/notebook/da84df57-4f9c-4d62-a1df-c1e295964e02", slides: "ch5_slides.pdf", extras: [{ label: "試薬ラベル対応表 (PDF)", file: "ch5_reagent_labels.pdf" }] },
   },
   // 第5章 2日目の撮影・観察の順番待ち: Apps Script ウェブアプリの URL (…/exec)。空なら「準備中」と表示する
-  queueApi: "",
+  queueApi: "https://script.google.com/macros/s/AKfycbyCBgCd_dvgRg95Pf_aNDXettNJCFEWVWs5SqMSd4x4cZN6ynV--QWRIZmt1Az29s59XQ/exec",
   // 実習日 (集合: B53・B54 実習室)
   sessions: {
     A: [
