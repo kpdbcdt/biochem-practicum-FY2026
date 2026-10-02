@@ -50,7 +50,7 @@
 <script>
 const $ = (s) => document.querySelector(s);
 let key = ""; try { key = localStorage.getItem("q.key") || ""; } catch (e) {}
-let group = Q.defaultGroup(), items = [], busy = false;
+let group = Q.defaultGroup(), items = [];
 
 function teamButtons(el, kinds) {
   el.innerHTML = Array.from({ length: Q.TEAMS }, (_, i) => `${group}${i + 1}`).map((t) => {
@@ -85,18 +85,21 @@ function render() {
   document.querySelectorAll("#grp button").forEach((b) => b.classList.toggle("active", b.dataset.g === group));
 }
 
-async function act(p) {
-  if (busy) return; busy = true;
-  try { await Q.call({ ...p, key }); $("#msg").innerHTML = ""; }
-  catch (e) { $("#msg").innerHTML = `<p class="err">${e.message}</p>`; }
-  finally { busy = false; }
+// 連続で押しても取りこぼさないよう、操作は 1 件ずつ順番に送る
+let chain = Promise.resolve();
+function act(p) {
+  chain = chain.then(async () => {
+    try { await Q.call({ ...p, key }); $("#msg").innerHTML = ""; }
+    catch (e) { $("#msg").innerHTML = `<p class="err">${Q.esc(e.message)}</p>`; }
+  });
+  return chain;
 }
 
 async function refresh() {
   try {
     const d = await Q.call({ action: "list", group });
-    items = d.items; render(); $("#stamp").textContent = "更新 " + Q.time(d.now);
-  } catch (e) { $("#msg").innerHTML = `<p class="err">${e.message}</p>`; }
+    items = Q.clean(d.items); render(); $("#stamp").textContent = "更新 " + Q.time(d.now);
+  } catch (e) { $("#msg").innerHTML = `<p class="err">${Q.esc(e.message)}</p>`; }
 }
 
 async function login(k) {
@@ -106,7 +109,7 @@ async function login(k) {
     key = k; try { localStorage.setItem("q.key", k); } catch (e) {}
     $("#login").classList.remove("active"); $("#main").classList.add("active");
     refresh(); if (!window.__qTimer) window.__qTimer = setInterval(refresh, 10000);
-  } catch (e) { $("#loginmsg").innerHTML = `<span class="err">${e.message}</span>`; }
+  } catch (e) { $("#loginmsg").innerHTML = `<span class="err">${Q.esc(e.message)}</span>`; }
 }
 
 $("#enter").onclick = () => login($("#key").value);

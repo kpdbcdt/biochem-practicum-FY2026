@@ -82,7 +82,7 @@ async function refresh() {
     $("#msg").innerHTML = "";
     $("#stamp").textContent = "更新 " + Q.time(d.now);
   } catch (e) {
-    $("#msg").innerHTML = `<p class="err">${e.message}</p>`;
+    $("#msg").innerHTML = `<p class="err">${Q.esc(e.message)}</p>`;
   }
 }
 

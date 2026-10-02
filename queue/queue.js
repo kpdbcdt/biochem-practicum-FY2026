@@ -39,12 +39,22 @@ const Q = {
   split(items) {
     const out = {};
     for (const q of Object.keys(Q.QUEUE)) out[q] = { called: [], waiting: [], done: [] };
-    items.slice().sort((a, b) => a.created.localeCompare(b.created)).forEach((it) => {
+    Q.clean(items).sort((a, b) => a.created.localeCompare(b.created)).forEach((it) => {
       const k = Q.KIND[it.kind]; if (!k) return;
       const bucket = out[k.queue][it.status];
       if (bucket) bucket.push(it);
     });
     return out;
+  },
+
+  esc(v) {
+    return String(v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  },
+
+  // シートを直接編集されても表示が壊れないよう、想定外の値の行は捨てる
+  clean(items) {
+    return (items || []).filter((it) => it && /^[AB]([1-9]|1\d|2[0-4])$/.test(it.team) && Q.KIND[it.kind]
+      && ["waiting", "called", "done"].includes(it.status) && /^[\w-]+$/.test(String(it.id)));
   },
 
   time(iso) {

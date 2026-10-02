@@ -102,9 +102,9 @@ function add_(group, team, kind) {
   if (team.charAt(0) !== group) throw new Error(team + ' は ' + group + ' グループの班ではありません');
   const d = today_();
   const dup = rows_().filter(function (r) {
-    return r.date === d && r.team === team && r.kind === kind && r.status !== 'cancelled';
+    return r.date === d && r.team === team && r.kind === kind && (r.status === 'waiting' || r.status === 'called');
   })[0];
-  if (dup) { delete dup._row; return dup; }   // 二重登録は既存の行を返すだけ
+  if (dup) { delete dup._row; return dup; }   // 待ち・呼出中の二重登録は既存の行を返すだけ（済みの班は再登録できる）
   const now = new Date().toISOString();
   // id の先頭に文字を付けて、シートによる数値・指数表記への自動変換を防ぐ
   const item = { id: 'q' + Utilities.getUuid().slice(0, 8), group: group, team: team, kind: kind,
