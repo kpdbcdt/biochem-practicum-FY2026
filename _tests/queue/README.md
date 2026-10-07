@@ -18,3 +18,5 @@ Helpers: `gas_mock.js` (Apps Script mocks), `site_server.js` (serves the repo ro
 
 The production key is never used here; the mock key is `secret`.
 After changing `Code.gs`, the PI must paste it into the sheet's Apps Script and deploy a new version (Deploy → Manage deployments → Edit → New version) — the tests cannot reach the deployed copy.
+
+Known limits: the LockService mock is a no-op (Node runs one request at a time, so concurrent writes are not exercised), and the page tests wait fixed times rather than polling — on a heavily loaded machine raise the sleeps before suspecting the app.

@@ -27,7 +27,7 @@ function start(ctx, opts = {}) {
         return res.end(out);
       }
       let f = path.join(ROOT, decodeURIComponent(u.pathname));
-      if (!f.startsWith(ROOT)) { res.statusCode = 403; return res.end(); }
+      if (f !== ROOT && !f.startsWith(ROOT + path.sep)) { res.statusCode = 403; return res.end(); }   // not a sibling like ROOT-other
       if (f.endsWith("/")) f += "index.html";
       if (!fs.existsSync(f)) { res.statusCode = 404; return res.end(); }
       let body = fs.readFileSync(f);
