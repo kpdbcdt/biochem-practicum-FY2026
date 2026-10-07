@@ -1,0 +1,11 @@
+{
+  "name": "biochem-practicum-queue-tests",
+  "private": true,
+  "description": "Tests for queue/ (Code.gs + staff/student pages). Not published: Jekyll skips _-prefixed folders.",
+  "scripts": {
+    "test": "node test_gas.js && node test_e2e.js && node test_slow.js"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.3"
+  }
+}
